@@ -8,6 +8,7 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "jsdoc/check-examples": "off",
     "no-console": "off",
     "prettier/prettier": "warn",
     "eslint-comments/no-use": "off",

@@ -9,9 +9,12 @@
     "lib",
     "public",
     "allure-results",
+    "*.svg",
     "package-lock.json"
   ],
   "words": [
+    "artifactcache",
+    "Aven",
     "camelcase",
     "commandline",
     "editorconfig",
@@ -23,11 +26,16 @@
     "nojekyll",
     "npmrc",
     "peaceiris",
+    "promisify",
+    "Retryable",
     "rmfr",
+    "sourcemap",
     "streetsidesoftware",
     "Tacklind",
     "tostr",
-    "useremail"
+    "useremail",
+    "USERPROFILE",
+    "windir"
   ],
   "flagWords": []
 }

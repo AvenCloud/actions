@@ -3,20 +3,6 @@
 
   "files.insertFinalNewline": false,
 
-  // Use eslint's FixOnSave instead
-  "[javascript]": {
-    "editor.formatOnSave": false
-  },
-  "[javascriptreact]": {
-    "editor.formatOnSave": false
-  },
-  "[typescript]": {
-    "editor.formatOnSave": false
-  },
-  "[typescriptreact]": {
-    "editor.formatOnSave": false
-  },
-
   "eslint.validate": [
     "javascript",
     "javascriptreact",
@@ -27,5 +13,14 @@
   "eslint.packageManager": "yarn",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+  "cSpell.words": [
+    "Aven",
+    "Retryable",
+    "USERPROFILE",
+    "artifactcache",
+    "promisify",
+    "sourcemap",
+    "windir"
+  ]
 }

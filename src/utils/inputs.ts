@@ -1,7 +1,6 @@
-export const isGitHubAction = process.env.GITHUB_ACTIONS === 'true';
+import { getInput } from '@actions/core';
 
-// TODO:
-
-// iff GH Actions, read inputs using GH Action scripts
-
-// otherwise read from local config, cli arguments, or prompt the dev?
+export async function input(name: string): Promise<string> {
+  return getInput(name);
+  // TODO: iff not otherwise read from local config, cli arguments, or prompt the dev?
+}

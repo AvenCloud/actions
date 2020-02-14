@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * This file takes packages in `src` and compiles them into single files (two if using a post step) and puts them in the `dist` folder along side the required `action.yml`.
  */
@@ -28,18 +29,22 @@ Promise.all(
     const mainAndPost = ['main', 'post'] as ['main', 'post'];
 
     const builds = mainAndPost.map(async mainOrPost => {
-      if (mainOrPost === 'post') {
-        // TODO: quit iff file missing
+      try {
+        const { code, map, assets } = await ncc(
+          `src/${target}/${mainOrPost}.ts`,
+          {
+            sourceMap: true,
+          },
+        );
+
+        // TODO: write code to dist
+      } catch (e) {
+        if (mainOrPost === 'main') throw e;
+
+        console.log('Error in Post', e);
+
+        if (e.foobar !== 'file missing') throw e;
       }
-
-      const { code, map, assets } = await ncc(
-        `src/${target}/${mainOrPost}.ts`,
-        {
-          sourceMap: true,
-        },
-      );
-
-      // TODO: write code to dist
     });
 
     const files = [copyFile(`src/${target}/action.yml`, `dist/${target}/`)];
