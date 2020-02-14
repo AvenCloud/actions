@@ -11,3 +11,7 @@ LICENSE
 .gitattributes
 .editorconfig
 .prettierignore
+
+.npmrc
+
+Export.svg
