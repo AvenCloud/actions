@@ -13,14 +13,5 @@
   "eslint.packageManager": "yarn",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  },
-  "cSpell.words": [
-    "Aven",
-    "Retryable",
-    "USERPROFILE",
-    "artifactcache",
-    "promisify",
-    "sourcemap",
-    "windir"
-  ]
+  }
 }
