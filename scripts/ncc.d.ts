@@ -1,11 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module '@zeit/ncc' {
-  type Assets = {
-    [filename: string]: { source: string; permissions: string; symlinks: any };
-  };
-  type Map = any;
-  type Code = string;
-
   /**
    * Options except watch.
    */
@@ -68,7 +61,15 @@ declare module '@zeit/ncc' {
     debugLog?: boolean;
   };
 
-  type Result = { code: Code; map: Map; assets: Assets };
+  type Assets = {
+    [filename: string]: {
+      source: Buffer;
+      permissions: number;
+      symlinks: unknown; // TODO: fix type
+    };
+  };
+
+  type Result = { code: string; map: string; assets: Assets };
 
   function ncc(
     input: string,
