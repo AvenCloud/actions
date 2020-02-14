@@ -70,7 +70,6 @@ export function spawn(
   ...args: string[]
 ): PromiseWithChild<void>;
 
-// eslint-disable-next-line @typescript-eslint/promise-function-async
 export function spawn(
   command: string,
   first: string | SpawnOptions | true,
@@ -118,7 +117,6 @@ const execP = promisify(nodeExec);
  * @param shell - If we should use a shell or not.
  * @returns The result of the execution.
  */
-// eslint-disable-next-line @typescript-eslint/promise-function-async
 export function exec(
   command: string,
   shell: true | null | string = true,
