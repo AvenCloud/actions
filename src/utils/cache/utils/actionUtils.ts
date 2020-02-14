@@ -1,9 +1,9 @@
-import * as core from '@actions/core';
-import * as io from '@actions/io';
-import * as fs from 'fs';
-import * as os from 'os';
-import * as path from 'path';
-import * as uuidV4 from 'uuid/v4';
+import core from '@actions/core';
+import io from '@actions/io';
+import { statSync } from 'fs';
+import { homedir } from 'os';
+import { join, resolve } from 'path';
+import uuidV4 from 'uuid/v4';
 
 import { Events, Outputs, State } from '../constants';
 import { ArtifactCacheEntry } from '../contracts';
@@ -26,15 +26,15 @@ export async function createTempDirectory(): Promise<string> {
         baseLocation = '/home';
       }
     }
-    tempDirectory = path.join(baseLocation, 'actions', 'temp');
+    tempDirectory = join(baseLocation, 'actions', 'temp');
   }
-  const dest = path.join(tempDirectory, uuidV4.default());
+  const dest = join(tempDirectory, uuidV4());
   await io.mkdirP(dest);
   return dest;
 }
 
 export function getArchiveFileSize(filePath: string): number {
-  return fs.statSync(filePath).size;
+  return statSync(filePath).size;
 }
 
 export function isExactKeyMatch(
@@ -84,14 +84,14 @@ export function logWarning(message: string): void {
 
 export function resolvePath(filePath: string): string {
   if (filePath.startsWith('~')) {
-    const home = os.homedir();
+    const home = homedir();
     if (!home) {
       throw new Error('Unable to resolve `~` to HOME');
     }
-    return path.join(home, filePath.slice(1));
+    return join(home, filePath.slice(1));
   }
 
-  return path.resolve(filePath);
+  return resolve(filePath);
 }
 
 export function getSupportedEvents(): string[] {

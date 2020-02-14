@@ -1,5 +1,5 @@
 import { exec } from '@actions/exec';
-import * as io from '@actions/io';
+import { which, mkdirP } from '@actions/io';
 import { existsSync } from 'fs';
 
 async function getTarPath(): Promise<string> {
@@ -11,7 +11,7 @@ async function getTarPath(): Promise<string> {
       return systemTar;
     }
   }
-  return await io.which('tar', true);
+  return await which('tar', true);
 }
 
 async function execTar(args: string[]): Promise<void> {
@@ -33,7 +33,7 @@ export async function extractTar(
   targetDirectory: string,
 ): Promise<void> {
   // Create directory to extract tar into
-  await io.mkdirP(targetDirectory);
+  await mkdirP(targetDirectory);
   const args = ['-xz', '-f', archivePath, '-C', targetDirectory];
   await execTar(args);
 }

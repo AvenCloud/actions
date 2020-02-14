@@ -1,5 +1,11 @@
-import * as core from '@actions/core';
-import * as fs from 'fs';
+import core from '@actions/core';
+import {
+  createWriteStream,
+  statSync,
+  openSync,
+  createReadStream,
+  closeSync,
+} from 'fs';
 import { BearerCredentialHandler } from '@actions/http-client/auth';
 import { HttpClient, HttpCodes } from '@actions/http-client';
 import {
@@ -13,7 +19,7 @@ import {
   ReserveCacheRequest,
   ReserveCacheResponse,
 } from './contracts';
-import * as utils from './utils/actionUtils';
+import { getArchiveFileSize } from './utils/actionUtils';
 
 function isSuccessStatusCode(statusCode?: number): boolean {
   if (!statusCode) {
@@ -118,7 +124,7 @@ export async function downloadCache(
   archiveLocation: string,
   archivePath: string,
 ): Promise<void> {
-  const stream = fs.createWriteStream(archivePath);
+  const stream = createWriteStream(archivePath);
   const httpClient = new HttpClient('actions/cache');
   const downloadResponse = await httpClient.get(archiveLocation);
   await pipeResponseToStream(downloadResponse, stream);
@@ -210,9 +216,9 @@ async function uploadFile(
   archivePath: string,
 ): Promise<void> {
   // Upload Chunks
-  const fileSize = fs.statSync(archivePath).size;
+  const fileSize = statSync(archivePath).size;
   const resourceUrl = getCacheApiUrl(`caches/${cacheId.toString()}`);
-  const fd = fs.openSync(archivePath, 'r');
+  const fd = openSync(archivePath, 'r');
 
   const concurrency = parseEnvNumber('CACHE_UPLOAD_CONCURRENCY') ?? 4; // # of HTTP requests in parallel
   const MAX_CHUNK_SIZE =
@@ -231,7 +237,7 @@ async function uploadFile(
           const start = offset;
           const end = offset + chunkSize - 1;
           offset += MAX_CHUNK_SIZE;
-          const chunk = fs.createReadStream(archivePath, {
+          const chunk = createReadStream(archivePath, {
             fd,
             start,
             end,
@@ -243,7 +249,7 @@ async function uploadFile(
       }),
     );
   } finally {
-    fs.closeSync(fd);
+    closeSync(fd);
   }
   return;
 }
@@ -271,7 +277,7 @@ export async function saveCache(
 
   // Commit Cache
   core.debug('Committing cache');
-  const cacheSize = utils.getArchiveFileSize(archivePath);
+  const cacheSize = getArchiveFileSize(archivePath);
   const commitCacheResponse = await commitCache(httpClient, cacheId, cacheSize);
   if (!isSuccessStatusCode(commitCacheResponse.statusCode)) {
     throw new Error(
