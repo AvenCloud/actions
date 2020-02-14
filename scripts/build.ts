@@ -1,53 +1,72 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * This file takes packages in `src` and compiles them into single files (two if using a post step) and puts them in the `dist` folder along side the required `action.yml`.
  */
 
 import ncc from '@zeit/ncc';
+import { ensureFileIs, ensureFilesAre } from './utils/Files';
+import { promises } from 'fs';
 
+const { mkdir, copyFile } = promises;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const [binary, script, ...targets] = process.argv;
 
-console.log('Binary:', binary);
-console.log('Script:', script);
+// console.log('Binary:', binary);
+// console.log('Script:', script);
 
 if (!targets.length) {
-  throw new Error('Target missing!');
+  // TODO: Find all `action.yml` and build all those folders?
 
-  // TODO: build them all? Find all `action.yml` and build all those folders?
-}
-
-console.log(targets);
-
-async function copyFile(source: string, dest: string): Promise<void> {
-  // TODO: implement
+  targets.push('checkout');
 }
 
 Promise.all(
   targets.map(async target => {
     console.log(`Building target: ${target}`);
 
+    const dir = mkdir(`dist/${target}`, { recursive: true });
+
     const mainAndPost = ['main', 'post'] as ['main', 'post'];
 
     const builds = mainAndPost.map(async mainOrPost => {
       try {
-        const { code, map, assets } = await ncc(
-          `src/${target}/${mainOrPost}.ts`,
-          {
-            sourceMap: true,
-          },
-        );
+        const build = ncc(`./src/${target}/${mainOrPost}.ts`, {
+          sourceMap: true,
+          quiet: true,
+          minify: true,
+          filterAssetBase: './src/',
+        });
 
-        // TODO: write code to dist
+        await mkdir(`dist/${target}/${mainOrPost}`, { recursive: true });
+
+        const { code, map, assets } = await build;
+
+        await Promise.all([
+          ensureFileIs(`dist/${target}/${mainOrPost}/index.js`, code),
+          ensureFileIs(`dist/${target}/${mainOrPost}/index.js.map`, map),
+
+          // TODO: Handle permissions and symlinks
+          ensureFilesAre(
+            Object.keys(assets).map(filename => ({
+              filename: `dist/${target}/${mainOrPost}/${filename}`,
+              contents: assets[filename].source,
+            })),
+          ),
+        ]);
       } catch (e) {
         if (mainOrPost === 'main') throw e;
 
         console.log('Error in Post', e);
 
-        if (e.foobar !== 'file missing') throw e;
+        console.log('Maybe ok');
       }
     });
 
-    const files = [copyFile(`src/${target}/action.yml`, `dist/${target}/`)];
+    await dir;
+
+    const files = [
+      copyFile(`src/${target}/action.yml`, `dist/${target}/action.yml`),
+    ];
 
     await Promise.all([...builds, ...files]);
 
