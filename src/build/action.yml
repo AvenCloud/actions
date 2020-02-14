@@ -1,0 +1,11 @@
+# https://help.github.com/en/articles/metadata-syntax-for-github-actions
+
+name: Aven Build
+description: Build an Aven project
+author: Cameron Tacklind <cameron@tacklind.com>
+# TODO: Options?
+# inputs:
+runs:
+  using: node12
+  main: main/index.js
+  post: post/index.js

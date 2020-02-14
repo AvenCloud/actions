@@ -1,0 +1,2 @@
+# Set the default behavior for all text files to checkout with LF
+* text=auto eol=lf

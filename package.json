@@ -1,0 +1,46 @@
+{
+  "name": "aven-github-actions",
+  "version": "0.0.0",
+  "author": "Cameron Tacklind <cameron@tacklind.com>",
+  "license": "Apache 2.0",
+  "private": true,
+  "description": "GitHub Actions that do more in fewer steps",
+  "keywords": [
+    "actions",
+    "node",
+    "git",
+    "clone",
+    "commit",
+    "cache"
+  ],
+  "scripts": {
+    "build": "ts-node scripts/build.ts",
+    "lint": "eslint \"**/*\"",
+    "format": "prettier \"**/*\"",
+    "spellcheck": "cspell \"**/*\"",
+    "format-check": "npm run format -- --check",
+    "clean": "rm -rf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AvenCloud/actions.git"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.2",
+    "@actions/io": "^1.0.2",
+    "ts-node": "^8.6.2"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^3.12.2",
+    "@types/node": "^13.7.0",
+    "@types/rmfr": "^2.0.0",
+    "@typescript-eslint/parser": "^2.19.0",
+    "@zeit/ncc": "^0.21.0",
+    "cspell": "^4.0.46",
+    "eslint": "^6.8.0",
+    "eslint-plugin-github": "^3.4.0",
+    "js-yaml": "^3.13.1",
+    "prettier": "^1.19.1",
+    "typescript": "^3.7.5"
+  }
+}

@@ -1,0 +1,23 @@
+# https://help.github.com/en/articles/metadata-syntax-for-github-actions
+
+name: Aven Checkout
+description: Checkout a repo and install dependencies, with caching
+author: Cameron Tacklind <cameron@tacklind.com>
+inputs:
+  ref:
+    required: false
+    description: Which ref to checkout
+    default: ${{ github.sha }}
+  repo:
+    required: false
+    description: Which repository to work with
+    default: ${{ github.repository }}
+  token:
+    required: false
+    description: Token to use to fetch from repo with
+    default: ${{ github.token }}
+  # TODO: More options
+runs:
+  using: node12
+  main: main/index.js
+  post: post/index.js
