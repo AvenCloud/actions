@@ -4,8 +4,11 @@ name: Aven Build
 description: Build an Aven project
 author: Cameron Tacklind <cameron@tacklind.com>
 # TODO: Options?
-# inputs:
+inputs:
+  secrets:
+    required: false
+    description: JSON string of secrets to use
+    default: ${{ toJson(secrets) }}
 runs:
   using: node12
   main: main/index.js
-  post: post/index.js

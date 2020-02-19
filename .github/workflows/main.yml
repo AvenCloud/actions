@@ -5,85 +5,41 @@ on:
   push:
 
 jobs:
-  check-format:
-    name: Check - Format
-
+  publish:
+    name: Build, Check, and Publish (release)
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
     steps:
-      # TODO: use self
-      - name: Checkout latest code
-        uses: actions/checkout@v1
+      - name: Checkout latest code (using self)
+        uses: AvenCloud/actions/checkout@v1
 
-      - name: Configure Npm
-        run: |
-          echo "color = always" >> "${HOME}/.npmrc"
+      # - name: Checkout latest code (backup)
+      #   uses: actions/checkout@v1
+      # - name: Configure Npm
+      #   run: echo "color = always" >> "${HOME}/.npmrc"
+      # - name: Install Dependencies
+      #   run: npm install
 
-      - name: Build
-        run: npm install
-
-      - name: Prettier
+      - name: Check - Code Format
+        if: always()
         run: npm run format-check -- --color
 
-  check-lint:
-    name: Check - Lint
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout latest code
-        uses: actions/checkout@v1
-
-      - name: Configure Npm
-        run: |
-          echo "color = always" >> "${HOME}/.npmrc"
-
-      - name: Build
-        run: npm install
-
-      - name: ESLint
+      - name: Check - Lint
+        if: always()
         run: npm run lint -- --color
 
-  check-spelling:
-    name: Check - Spelling
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout latest code
-        uses: actions/checkout@v1
-
-      - name: Configure Npm
-        run: |
-          echo "color = always" >> "${HOME}/.npmrc"
-
-      - name: Build
-        run: npm install
-
-      - name: cSpell
+      - name: Check - Spelling
+        if: always()
         run: npm run spell -- --color
 
-  publish:
-    name: Publish - Pre-compiled Action
-    if: github.event_name == 'push' && github.ref == 'refs/heads/release'
-    needs: [check-format, check-lint, check-spelling]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout latest code
-        uses: actions/checkout@v1
-
-      - name: Configure Npm
-        run: |
-          echo "color = always" >> "${HOME}/.npmrc"
-
-      - name: Install Dependencies
-        run: npm install
-
       - name: Build
+        if: always()
         run: npm run build
 
       - name: Publish to GitHub
+        # Only publish if using release branch and all other steps succeed
+        if: github.ref == 'refs/heads/release'
         uses: peaceiris/actions-gh-pages@v2
         env:
           PUBLISH_BRANCH: v1

@@ -3,14 +3,8 @@
 
   "files.insertFinalNewline": false,
 
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
+  "eslint.packageManager": "npm",
 
-  "eslint.packageManager": "yarn",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   }

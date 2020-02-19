@@ -1,9 +1,13 @@
+# Built files
 /dist/
 /public/
 /node_modules/
 /allure-results/
 
+# Managed by other tools
 package-lock.json
+Export.svg
+Usage.svg
 
 # No Parser
 LICENSE
@@ -11,7 +15,6 @@ LICENSE
 .gitattributes
 .editorconfig
 .prettierignore
-
 .npmrc
 
-Export.svg
+src/prepare/getNode.sh

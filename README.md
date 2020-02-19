@@ -6,27 +6,71 @@ Pre-made "Actions" for deploying Aven projects with GitHub Actions
 
 ## Usage
 
+![Usage Map](Usage.svg)
+
+Add a couple files to your repository.
+
+1. Workflow config
+2. Aven config
+3. Add secrets
+
+### Workflow Config
+
 Add a step to a GitHub Action `.yml` config like this, depending on the features you'd like to use.
 
 A minimal, but complete, example `workflow.yml`:
 
 ```yml
-name: My Workflow
 jobs:
   my-job:
     runs-on: ubuntu-latest # Anything should work
     steps:
-      - name: Checkout
-        id: checkout
+      - name: Checkout Latest
         uses: AvenCloud/actions/checkout@v1
-        with:
-          project: hello-world
 
-      - name: Check
-        uses: AvenCloud/actions/check@v1
+      - name: Test and Check
+        uses: AvenCloud/actions/test@v1
 
-      - name: Deploy
+      - name: Build Application
+        uses: AvenCloud/actions/build@v1
+
+      - name: Deploy to Runtime Server
         uses: AvenCloud/actions/deploy@v1
+```
+
+### Aven Config
+
+Create a file `aven.json` at the top level of your project.
+
+This file describes how to setup your app on a Debian environment.
+
+```json
+{
+  "domains": ["my.domain.com", "www.my.domain.com", "alternate.domain.com"],
+  "serviceName": "my-systemd-service",
+  "timezone": "America/Los_Angeles",
+  "aptDependencies": [],
+  "runtimeAptDependencies": []
+}
+```
+
+### Secrets
+
+A couple secrets need to be added to GitHub as well:
+
+#### Deploy Keys
+
+Keys that will allow root access to server we're deploying to.
+
+Run this command on a linux bash shell to generate a new key pair.
+
+- `DEPLOY_KEY` _Example: `-----BEGIN RSA PRIVATE KEY-----\n...[lines of base64]...\n-----END RSA PRIVATE KEY-----`_
+- `DEPLOY_KEY_PUB` _Example: `ssh-rsa AAAAB...[base64]...m6Q== GitHub Action 2020-02-17`_
+
+<!-- cSpell:ignore mkfifo -->
+
+```bash
+(mkfifo key key.pub && cat key key.pub &) && echo "y" | ssh-keygen -t rsa -b 4096 -C "GitHub Action $(date +%Y-%m-%d)" -N '' -q -f key ; rm key key.pub
 ```
 
 ### Checkout
@@ -47,9 +91,11 @@ jobs:
     steps:
       - name: Use Aven Tools Checkout Action
         uses: AvenCloud/actions/checkout@v1
-        id: checkout
         with:
-          project: hello-world
+          # All optional
+          ref: Git Reference to download
+          repo: GitHub Repository to download
+          token: GH Token Override
 ```
 
 ### Test & Check
@@ -64,15 +110,16 @@ jobs:
   my-job:
     runs-on: ubuntu-latest # Anything should work
     steps:
-      - name: Use Aven Tools Check Action
-        uses: AvenCloud/actions/check@v1
+      - name: Use Aven Tools Test Action
+        uses: AvenCloud/actions/test@v1
         with:
-          # Options
+          # No Options (yet)
 ```
 
 ### Deploy
 
-Do the deploy step specified by the aven project
+Do the deploy step specified by the aven project.
+Likely includes migration script.
 
 - Run `npm run deploy`
 
@@ -99,6 +146,8 @@ npm i
 
 Instead of using complicated `scripts` in `package.json`, we use a powerful Node.js script to actually do the building we happen to require.
 
+![Build Map](Export.svg)
+
 ### Publish
 
 GitHub Actions, to be usable, need to be released with a "ready to run" version of the code directly from a repository on GitHub.
@@ -117,6 +166,6 @@ Therefore, there is no reason to link the two (source and release) trees.
 So the release tree will be independent but reflect the master tree.
 
 We also want to have a set of different tools that are easy to use with interconnected functionality.
-Instead of publishing to a number of different repositories so that they each have a different name, we'll use sub-folder branches of the release branches.
-This results in a number of parallel release branches in the main repo but makes using each one independently very easy.
-In the source, they can share code, but once compiled they are all standalone files ready for execution.
+Instead of publishing to a number of different repositories so that they each have a different name, we'll use sub-folders of the released versions.
+
+The source for the prepare script that runs on the remote system is also compiled to a sub-folder of `prepare` for consumption by various actions.

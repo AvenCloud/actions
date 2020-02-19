@@ -1,6 +1,3 @@
-/* eslint-disable jsdoc/require-param-type */
-/* eslint-disable jsdoc/require-returns-type */
-
 import {
   spawn as nodeSpawn,
   exec as nodeExec,
@@ -13,8 +10,8 @@ import { promisify } from 'util';
 const defaultShell = '/bin/bash';
 
 /**
- * These are functions that run some other program
- * each is some combination of these running modes.
+ * These are functions that run some other program.
+ * Each is some combination of these running modes.
  *
  * - Shell                       vs  Command + args
  * - Captured & Buffered output  vs  Stream to stdout/stderr
@@ -107,15 +104,17 @@ export function spawn(
 const execP = promisify(nodeExec);
 
 /**
- * Run a command and capture output. Prints nothing.
+ * Run a command and capture output.
+ *
+ * Prints nothing.
  *
  * - Shell
  * - Captured & Buffered output
  * - Promised result.
  *
- * @param command - Command to run.
- * @param shell - If we should use a shell or not.
- * @returns The result of the execution.
+ * @param {string} command - The command to run.
+ * @param {true|string} shell - Should we use a shell. Default true.
+ * @returns {ChildProcess} The child.
  */
 export function exec(
   command: string,

@@ -1,13 +1,6 @@
 import { promises } from 'fs';
 
-const {
-  readFile,
-  writeFile,
-  symlink,
-  readlink,
-  unlink,
-  access: nodeAccess,
-} = promises;
+const { readFile, writeFile, symlink, readlink, unlink } = promises;
 
 export async function ensureFileContains(
   filename: string,
@@ -24,7 +17,7 @@ export async function ensureFileContains(
 
 export async function ensureFileIs(
   filename: string,
-  contents: string | Buffer,
+  contents: string,
 ): Promise<boolean> {
   // We could just skip the read part of this but this preserves modification times
   const current = (await readFile(filename).catch(() => '')).toString();
@@ -39,7 +32,7 @@ export async function ensureFileIs(
 export async function ensureFilesAre(
   list: {
     filename: string;
-    contents: string | Buffer;
+    contents: string;
   }[],
 ): Promise<void> {
   await Promise.all(
@@ -61,13 +54,4 @@ export async function ensureLinkIs(
   if (current !== undefined) await unlink(path);
 
   await symlink(target, path);
-}
-
-export async function access(
-  ...args: Parameters<typeof nodeAccess>
-): Promise<boolean> {
-  return nodeAccess(...args).then(
-    () => true,
-    () => false,
-  );
 }

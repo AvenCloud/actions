@@ -1,26 +1,13 @@
-import { input } from '../utils/inputs';
-import { spawn, exec } from '../utils/spawn';
-
-import { promises } from 'fs';
 import { platform } from 'os';
-import restore from '../utils/cache/restore';
 
-const { access } = promises;
+import YarnOrNpm from 'yarn-or-npm';
 
-async function exists(filePath: string): Promise<boolean> {
-  return access(filePath).then(
-    () => true,
-    () => false,
-  );
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function hashFiles(...globs: string[]): Promise<string> {
-  // TODO: implement correctly
-  return await input('ref');
-}
-
-// Other packages https://github.com/actions/toolkit/blob/master/README.md#packages
+import restore from '../../utils/cache/restore';
+import { input } from '../../utils/inputs';
+import { hashFiles } from '../../utils/hashFiles';
+import { spawn, exec } from '../../utils/spawn';
+import { readAvenConfig } from '../../utils/readAvenConfig';
+import { reportError } from '../../utils/reportError';
 
 export async function main(): Promise<void> {
   /**
@@ -45,11 +32,32 @@ export async function main(): Promise<void> {
    */
   const token = await input('token');
 
+  //
+  // Get the latest source
+  //
+
   // TODO: do this in node?
   await spawn(
     `curl -H 'Authorization: token ${token}' -H 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/${repo}/tarball/${ref} | tar xz --strip 1`,
     true,
   );
+
+  //
+  // Install system dependencies
+  //
+
+  const config = await readAvenConfig();
+
+  if (config) {
+    if (config.aptDependencies) {
+      await spawn('apt-get', 'install', '-y', ...config.aptDependencies);
+    }
+  }
+  // TODO: Support more than just apt packages?
+
+  //
+  // Caching
+  //
 
   const hash = hashFiles('package-lock.json', 'yarn.lock');
 
@@ -60,13 +68,11 @@ export async function main(): Promise<void> {
 
   await restore({ path: 'node_modules', keys: nodeKeys });
 
-  // Assume Npm otherwise
-  const yarn = await exists('yarn.lock');
+  if (YarnOrNpm() === 'yarn') {
+    const yarnCache = await exec('yarn cache dir');
 
-  if (yarn) {
-    const yarnCache = exec('yarn cache dir');
-
-    const path = (await yarnCache).stdout.slice(0, -1);
+    // Remove trailing "\n"
+    const path = yarnCache.stdout.slice(0, -1);
 
     const yarnKeys = [
       `yarn-${platform()}-build-${await hash}`,
@@ -88,13 +94,4 @@ export async function main(): Promise<void> {
   }
 }
 
-if (!module.parent) {
-  main().then(
-    () => console.log('Done with normal execution'),
-    e => {
-      process.exitCode = 1;
-      console.log('Error in run!');
-      console.log(e);
-    },
-  );
-}
+if (!module.parent) main().catch(reportError);

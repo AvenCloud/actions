@@ -14,12 +14,15 @@
     "cache"
   ],
   "scripts": {
-    "build": "ts-node --files --dir scripts build.ts",
+    "build": "ts-node --files --dir scripts build",
     "lint": "eslint \"**/*\"",
     "format": "prettier \"**/*\"",
     "spell": "cspell \"**/*\"",
     "format-check": "npm run format -- --check",
     "clean": "rm -rf dist"
+  },
+  "engines": {
+    "yarn": "no. Use Npm here."
   },
   "repository": {
     "type": "git",
@@ -45,6 +48,7 @@
     "eslint-plugin-github": "^3.4.0",
     "js-yaml": "^3.13.1",
     "prettier": "^1.19.1",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "yarn-or-npm": "^3.0.1"
   }
 }

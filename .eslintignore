@@ -1,9 +1,13 @@
-# Never lint
+# Built files
 /dist/
-/node_modules/
 /public/
+/node_modules/
 /allure-results/
+
+# Managed by other tools
 package-lock.json
+Export.svg
+Usage.svg
 
 # No linters configured
 *.md
@@ -11,4 +15,4 @@ package-lock.json
 *.json
 LICENSE
 
-Export.svg
+src/prepare/getNode.sh
