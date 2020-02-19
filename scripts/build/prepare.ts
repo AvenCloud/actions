@@ -22,7 +22,7 @@ export async function buildPrepareScript(): Promise<void> {
   const { code, map, assets } = await prepare;
 
   await Promise.all([
-    copyFile(`${prepareSrc}/getNode.sh`, `${deployDir}/getNode.sh`),
+    copyFile(`${prepareSrc}/setup.sh`, `${deployDir}/setup.sh`),
     ensureFileIs(`${deployDir}/index.js`, code),
     ensureFileIs(`${deployDir}/index.js.map`, map),
 

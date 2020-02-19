@@ -18,13 +18,14 @@ export async function ensureFileContains(
 export async function ensureFileIs(
   filename: string,
   contents: string,
+  mode?: number,
 ): Promise<boolean> {
   // We could just skip the read part of this but this preserves modification times
   const current = (await readFile(filename).catch(() => '')).toString();
 
   if (current === contents) return false;
 
-  await writeFile(filename, contents);
+  await writeFile(filename, contents, { mode });
 
   return true;
 }

@@ -1,5 +1,24 @@
+import { spawn } from '../../utils/spawn';
+
 export async function prepareRemoteServer(): Promise<void> {
-  // TODO ...
-  // copy prepare scripts, aven.json, and generated secrets.json to remote
-  // run prepare script on remote
+  await spawn(
+    'rsync',
+
+    '--compress',
+    '--links',
+    '--executability',
+
+    // Build script puts a `remote` folder next to action.yml in dist
+    `${__dirname}/../remote/`,
+
+    'aven.json',
+
+    // TODO ...
+    // 'secrets.json',
+
+    // Deploy to home dir
+    'runtime-server:',
+  );
+
+  await spawn('ssh', 'runtime-server', 'bash', 'setup.sh');
 }

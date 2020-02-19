@@ -3,10 +3,6 @@
 name: Aven Build
 description: Build an Aven project
 author: Cameron Tacklind <cameron@tacklind.com>
-inputs:
-  deploy-directory:
-    required: true
-    description: Folder to copy to remote
 runs:
   using: node12
   main: main/index.js
