@@ -1,0 +1,14 @@
+# https://help.github.com/en/articles/metadata-syntax-for-github-actions
+
+name: Aven Deploy
+description: Deploy an Aven project to a runtime server
+author: Cameron Tacklind <cameron@tacklind.com>
+# TODO: Options?
+inputs:
+  ref:
+    required: false
+    description: Kibana
+    default: ${{ github.sha }}
+runs:
+  using: node12
+  main: main/index.js
