@@ -1,15 +1,21 @@
+import { input } from '../../utils/inputs';
 import { prepareRemoteServer } from '../prepare/prepareRemoteServer';
 import { reportError } from '../../utils/reportError';
 
 // cSpell:ignore rsync executability
 
 async function copySources(): Promise<void> {
+  // TODO: Finish this function
+
+  input('deploy-directory');
+
   console.log(
     'TODO: rsync --recursive --links --delete --executability ${{ steps.build.outputs.path }}/ deploy-server:/opt/production',
   );
 }
 async function restartApplication(): Promise<void> {
   console.log('restart');
+
   // TODO: ssh deploy-server systemctl stop serviceName
   // TODO: migrate db
   /*

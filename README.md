@@ -37,6 +37,8 @@ jobs:
 
       - name: Deploy to Runtime Server
         uses: AvenCloud/actions/deploy@v1
+        with:
+          deploy-directory: dist
 ```
 
 ### Aven Config
@@ -114,6 +116,7 @@ jobs:
       - name: Use Aven Tools Deploy Action
         uses: AvenCloud/actions/deploy@v1
         with:
+          deploy-directory: dist
           # Options
 ```
 
