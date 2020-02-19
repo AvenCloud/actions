@@ -15,7 +15,7 @@ async function setupShhConfig(): Promise<void> {
 
   const deployKey = await input('deploy-key');
 
-  const identityFile = `${process.env.HOME}/id_rsa`;
+  const identityFile = `${process.env.HOME}/.ssh/id_rsa`;
 
   files.push(ensureFileIs(identityFile, deployKey, 0o600));
 
