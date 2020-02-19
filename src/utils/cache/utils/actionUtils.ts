@@ -1,5 +1,5 @@
-import core from '@actions/core';
-import io from '@actions/io';
+import { debug, saveState, setOutput, getState, info } from '@actions/core';
+import { mkdirP } from '@actions/io';
 import { statSync } from 'fs';
 import { homedir } from 'os';
 import { join, resolve } from 'path';
@@ -29,7 +29,7 @@ export async function createTempDirectory(): Promise<string> {
     tempDirectory = join(baseLocation, 'actions', 'temp');
   }
   const dest = join(tempDirectory, uuidV4());
-  await io.mkdirP(dest);
+  await mkdirP(dest);
   return dest;
 }
 
@@ -51,11 +51,11 @@ export function isExactKeyMatch(
 }
 
 export function setCacheState(state: ArtifactCacheEntry): void {
-  core.saveState(State.CacheResult, JSON.stringify(state));
+  saveState(State.CacheResult, JSON.stringify(state));
 }
 
 export function setCacheHitOutput(isCacheHit: boolean): void {
-  core.setOutput(Outputs.CacheHit, isCacheHit.toString());
+  setOutput(Outputs.CacheHit, isCacheHit.toString());
 }
 
 export function setOutputAndState(
@@ -68,8 +68,8 @@ export function setOutputAndState(
 }
 
 export function getCacheState(): ArtifactCacheEntry | undefined {
-  const stateData = core.getState(State.CacheResult);
-  core.debug(`State: ${stateData}`);
+  const stateData = getState(State.CacheResult);
+  debug(`State: ${stateData}`);
   if (stateData) {
     return JSON.parse(stateData) as ArtifactCacheEntry;
   }
@@ -79,7 +79,7 @@ export function getCacheState(): ArtifactCacheEntry | undefined {
 
 export function logWarning(message: string): void {
   const warningPrefix = '[warning]';
-  core.info(`${warningPrefix}${message}`);
+  info(`${warningPrefix}${message}`);
 }
 
 export function resolvePath(filePath: string): string {

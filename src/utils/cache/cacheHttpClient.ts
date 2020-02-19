@@ -1,4 +1,4 @@
-import core from '@actions/core';
+import { debug, setSecret, info } from '@actions/core';
 import {
   createWriteStream,
   statSync,
@@ -52,7 +52,7 @@ function getCacheApiUrl(resource: string): string {
   }
 
   const url = `${baseUrl}_apis/artifactcache/${resource}`;
-  core.debug(`Resource Url: ${url}`);
+  debug(`Resource Url: ${url}`);
   return url;
 }
 
@@ -102,9 +102,9 @@ export async function getCacheEntry(
   if (!cacheDownloadUrl) {
     throw new Error('Cache not found.');
   }
-  core.setSecret(cacheDownloadUrl);
-  core.debug(`Cache Result:`);
-  core.debug(JSON.stringify(cacheResult));
+  setSecret(cacheDownloadUrl);
+  debug(`Cache Result:`);
+  debug(JSON.stringify(cacheResult));
 
   return cacheResult;
 }
@@ -160,7 +160,7 @@ async function uploadChunk(
   start: number,
   end: number,
 ): Promise<void> {
-  core.debug(
+  debug(
     `Uploading chunk of size ${end -
       start +
       1} bytes at offset ${start} with content range: ${getContentRange(
@@ -188,7 +188,7 @@ async function uploadChunk(
   }
 
   if (isRetryableStatusCode(response.message.statusCode)) {
-    core.debug(
+    debug(
       `Received ${response.message.statusCode}, retrying chunk at offset ${start}.`,
     );
     const retryResponse = await uploadChunkRequest();
@@ -223,10 +223,10 @@ async function uploadFile(
   const concurrency = parseEnvNumber('CACHE_UPLOAD_CONCURRENCY') ?? 4; // # of HTTP requests in parallel
   const MAX_CHUNK_SIZE =
     parseEnvNumber('CACHE_UPLOAD_CHUNK_SIZE') ?? 32 * 1024 * 1024; // 32 MB Chunks
-  core.debug(`Concurrency: ${concurrency} and Chunk Size: ${MAX_CHUNK_SIZE}`);
+  debug(`Concurrency: ${concurrency} and Chunk Size: ${MAX_CHUNK_SIZE}`);
 
   const parallelUploads = [...new Array(concurrency).keys()];
-  core.debug('Awaiting all uploads');
+  debug('Awaiting all uploads');
   let offset = 0;
 
   try {
@@ -272,11 +272,11 @@ export async function saveCache(
 ): Promise<void> {
   const httpClient = createHttpClient();
 
-  core.debug('Upload cache');
+  debug('Upload cache');
   await uploadFile(httpClient, cacheId, archivePath);
 
   // Commit Cache
-  core.debug('Committing cache');
+  debug('Committing cache');
   const cacheSize = getArchiveFileSize(archivePath);
   const commitCacheResponse = await commitCache(httpClient, cacheId, cacheSize);
   if (!isSuccessStatusCode(commitCacheResponse.statusCode)) {
@@ -285,5 +285,5 @@ export async function saveCache(
     );
   }
 
-  core.info('Cache saved successfully');
+  info('Cache saved successfully');
 }
