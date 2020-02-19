@@ -1,5 +1,6 @@
 import { spawn } from '../../utils/spawn';
 import yarnOrNpm from 'yarn-or-npm';
+import { reportError } from '../../utils/reportError';
 
 export async function main(): Promise<void> {
   await spawn(yarnOrNpm(), 'test');
@@ -8,12 +9,5 @@ export async function main(): Promise<void> {
 }
 
 if (!module.parent) {
-  main().then(
-    () => console.log('Done with normal execution'),
-    e => {
-      process.exitCode = 1;
-      console.log('Error in run!');
-      console.log(e);
-    },
-  );
+  main().then(() => console.log('Done with normal execution'), reportError);
 }
