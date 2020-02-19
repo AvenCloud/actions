@@ -46,7 +46,11 @@ export async function main(): Promise<void> {
   // Install system dependencies
   //
 
-  const config = await readAvenConfig();
+  const config = await readAvenConfig().catch(e => {
+    console.log('Error reading `aven.json`.');
+    console.log(e);
+    console.log('Might be ok to continue...');
+  });
 
   if (config) {
     if (config.aptDependencies) {
