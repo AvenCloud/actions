@@ -21,6 +21,7 @@ Add a step to a GitHub Action `.yml` config like this, depending on the features
 A minimal, but complete, example `workflow.yml`:
 
 ```yml
+on: push
 jobs:
   my-job:
     runs-on: ubuntu-latest # Anything should work
