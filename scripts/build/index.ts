@@ -9,8 +9,8 @@ import { buildTarget } from './target';
 Promise.all([
   buildPrepareScript(),
   buildTarget('checkout'),
-  buildTarget('build'),
-  buildTarget('test'),
+  // buildTarget('build'),
+  // buildTarget('test'),
   buildTarget('prepare'),
   buildTarget('deploy'),
 ]).catch(reportError);

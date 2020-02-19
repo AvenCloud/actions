@@ -30,10 +30,10 @@ jobs:
         uses: AvenCloud/actions/checkout@v1
 
       - name: Test and Check
-        uses: AvenCloud/actions/test@v1
+        uses: yarn test
 
       - name: Build Application
-        uses: AvenCloud/actions/build@v1
+        run: yarn build
 
       - name: Deploy to Runtime Server
         uses: AvenCloud/actions/deploy@v1
@@ -97,24 +97,6 @@ jobs:
           ref: Git Reference to download
           repo: GitHub Repository to download
           token: GH Token Override
-```
-
-### Test & Check
-
-Run checks and tests that should pass before deploying
-
-- Run `npm run test`
-- Run any `package.json` `scripts` that start with `check`
-
-```yml
-jobs:
-  my-job:
-    runs-on: ubuntu-latest # Anything should work
-    steps:
-      - name: Use Aven Tools Test Action
-        uses: AvenCloud/actions/test@v1
-        with:
-          # No Options (yet)
 ```
 
 ### Deploy
