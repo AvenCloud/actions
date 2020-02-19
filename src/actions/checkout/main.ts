@@ -38,7 +38,7 @@ export async function main(): Promise<void> {
 
   // TODO: do this in node?
   await spawn(
-    `curl -H 'Authorization: token ${token}' -H 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/${repo}/tarball/${ref} | tar xz --strip 1`,
+    `curl --location --header 'Authorization: token ${token}' --header 'Accept: application/vnd.github.v3.raw' https://api.github.com/repos/${repo}/tarball/${ref} | tar xz --strip 1`,
     true,
   );
 
