@@ -135,6 +135,21 @@ jobs:
           # Options
 ```
 
+## New Server Setup
+
+1. Generate a new deploy key pair `(mkfifo key ...`
+2. Add keys to GitHub Secrets
+   - `DEPLOY_KEY`
+   - `DEPLOY_KEY_PUB`
+3. Create new server instance
+   - Use generated key for `root` `authorized_keys`
+   - get new server IP
+4. Create DNS entry for IP
+5. Add files to repo
+   - `aven.json`
+   - GitHub Workflow
+6. Commit & Push
+
 ## Development
 
 Setup everything
