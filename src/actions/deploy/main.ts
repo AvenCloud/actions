@@ -40,7 +40,7 @@ Host runtime-server
   CheckHostIP no
 `;
 
-  files.push(ensureFileIs(`${process.env.HOME}/.ssh/config`, config));
+  files.push(ensureFileContains(`${process.env.HOME}/.ssh/config`, config));
 
   await Promise.all(files);
 }
