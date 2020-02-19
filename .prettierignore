@@ -17,4 +17,4 @@ LICENSE
 .prettierignore
 .npmrc
 
-src/prepare/getNode.sh
+src/prepare/setup.sh

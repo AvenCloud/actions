@@ -15,4 +15,4 @@ Usage.svg
 *.json
 LICENSE
 
-src/prepare/getNode.sh
+src/prepare/setup.sh

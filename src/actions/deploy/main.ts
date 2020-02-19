@@ -21,6 +21,8 @@ async function setupShhConfig(): Promise<void> {
 
   const host = (await readAvenConfig()).domains[0];
 
+  // cSpell:ignore keyscan
+
   const hostKeys = (await exec(`ssh-keyscan ${host}`)).stdout;
 
   console.log('Using host keys:');
