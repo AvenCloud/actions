@@ -4,11 +4,7 @@ name: Aven Deploy
 description: Deploy an Aven project to a runtime server
 author: Cameron Tacklind <cameron@tacklind.com>
 # TODO: Options?
-inputs:
-  ref:
-    required: false
-    description: Kibana
-    default: ${{ github.sha }}
+# inputs:
 runs:
   using: node12
   main: main/index.js

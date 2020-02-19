@@ -4,11 +4,7 @@ name: Aven Prepare
 description: Prepare a server for Aven application runtime
 author: Cameron Tacklind <cameron@tacklind.com>
 # TODO: Options?
-inputs:
-  secrets:
-    required: false
-    description: JSON string of secrets to use
-    default: ${{ toJson(secrets) }}
+# inputs:
 runs:
   using: node12
   main: main/index.js
