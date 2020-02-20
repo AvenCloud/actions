@@ -10,6 +10,7 @@ import { spawn, exec } from '../../utils/spawn';
 
 import { addAptDependencies } from './aptDependencies';
 import { readAvenConfig } from '../../utils/readAvenConfig';
+import { debug } from '../../utils/io';
 
 addAptDependencies('nginx', 'certbot');
 
@@ -402,7 +403,9 @@ export async function setupNginx(): Promise<void> {
   const { domains } = await readAvenConfig();
 
   await checkNginxConfig().catch(async () => {
-    // Something went wrong. Clear possible broken configs and try again.
+    debug(
+      'Something went wrong. Clearing possibly broken configs and trying again.',
+    );
 
     // TODO: Only clear out failing configs
     await Promise.all(
