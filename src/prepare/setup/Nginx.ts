@@ -137,8 +137,6 @@ async function setupNginxConfigs(): Promise<void> {
 
   const { domains } = await readAvenConfig();
 
-  await mkdir(dir, { recursive: true });
-
   const conf = {} as FileList;
 
   conf.basic = `sendfile on;
@@ -221,21 +219,27 @@ ssl_prefer_server_ciphers on;
 `;
 
   await Promise.all([
-    ensureFilesAre(
-      Object.entries(conf).map(([config, contents]) => ({
-        filename: `${dir}/${config}.conf`,
-        contents,
-      })),
+    mkdir(dir).then(() =>
+      ensureFilesAre(
+        Object.entries(conf).map(([config, contents]) => ({
+          filename: `${dir}/${config}.conf`,
+          contents,
+        })),
+      ),
     ),
 
     // Make sure certificate files just exist for first run.
-    ensureFileContains(
-      `${letsencryptLive}/${domains[0]}/fullchain.pem`,
-      'CERTIFICATE',
-    ),
-    ensureFileContains(
-      `${letsencryptLive}/${domains[0]}/privkey.pem`,
-      'CERTIFICATE',
+    mkdir(`${letsencryptLive}/${domains[0]}`).then(() =>
+      Promise.all([
+        ensureFileContains(
+          `${letsencryptLive}/${domains[0]}/fullchain.pem`,
+          'CERTIFICATE',
+        ),
+        ensureFileContains(
+          `${letsencryptLive}/${domains[0]}/privkey.pem`,
+          'CERTIFICATE',
+        ),
+      ]),
     ),
   ]);
 }
