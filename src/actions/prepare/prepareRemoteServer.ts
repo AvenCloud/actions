@@ -1,6 +1,8 @@
 import { spawn } from '../../utils/spawn';
 
 export async function prepareRemoteServer(): Promise<void> {
+  await spawn('ssh', 'runtime-server', 'uptime', '-p');
+
   await spawn(
     'rsync',
 
