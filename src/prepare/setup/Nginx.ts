@@ -358,6 +358,10 @@ YOURDOMAIN="${domains[0]}"
 cat ${letsencryptLive}/$YOURDOMAIN/{privkey,fullchain}.pem > ${outputFile}
 `;
 
+  const hook = '/etc/letsencrypt/renewal-hooks/deploy/reload-nginx';
+  await ensureFileIs(hook, certbotPostRenewNginx);
+  await chmod(hook, 0o755);
+
   // TODO: Support multiple independent domains that serve different websites.
 
   // Run once for each nginx server. Generates one key pair. Must include all domains that share server.
@@ -384,12 +388,6 @@ cat ${letsencryptLive}/$YOURDOMAIN/{privkey,fullchain}.pem > ${outputFile}
       [],
     ),
   );
-
-  // Setup hook after getting keys for the first time
-
-  const hook = '/etc/letsencrypt/renewal-hooks/deploy/reload-nginx';
-  await ensureFileIs(hook, certbotPostRenewNginx);
-  await chmod(hook, 0o755);
 }
 
 async function checkNginxConfig(): Promise<void> {
