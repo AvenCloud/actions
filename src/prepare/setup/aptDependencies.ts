@@ -1,5 +1,6 @@
 import { ensureFileIs } from '../../utils/fs';
 import { spawn, exec } from '../../utils/spawn';
+import { readAvenConfig } from '../../utils/readAvenConfig';
 
 const deps: string[] = [];
 
@@ -24,6 +25,11 @@ export async function setupAptDependencies(): Promise<void> {
   await spawn('apt-get', 'update');
 
   await spawn('apt-get', 'upgrade', '-y');
+
+  const config = await readAvenConfig();
+
+  addAptDependencies(...(config.aptDependencies ?? []));
+  addAptDependencies(...(config.runtimeAptDependencies ?? []));
 
   // cSpell:ignore noninteractive autoremove
 
