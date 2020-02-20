@@ -22,7 +22,7 @@ export async function prepareRemoteServer(): Promise<void> {
     '--executability',
 
     // Build script puts a `remote` folder next to action.yml in dist
-    `${__dirname}/../remote/`,
+    `${__dirname}/../../prepare/remote/`,
 
     'aven.json',
 
