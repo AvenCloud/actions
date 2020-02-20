@@ -39,7 +39,7 @@ export async function setupAptDependencies(): Promise<void> {
     { stdio: 'inherit', env: { DEBIAN_FRONTEND: 'noninteractive' } },
     'install',
     '-yq',
-    ...deps,
+    ...new Set(deps),
   );
 
   await spawn('apt-get', 'autoremove', '-y');
