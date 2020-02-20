@@ -2,16 +2,19 @@ import { spawn } from '../../utils/spawn';
 import { verbosityLevel } from '../../utils/io';
 
 export async function prepareRemoteServer(): Promise<void> {
-  const verboseArg: string[] = [];
+  const verboseSSHArg: string[] = [];
+  const verboseSpawnArg: string[] = [];
   const verbosity = await verbosityLevel();
 
-  if (verbosity > 1) verboseArg.unshift('--verbose');
+  if (verbosity > 2) verboseSSHArg.push('-v');
 
-  await spawn('ssh', ...verboseArg, 'runtime-server', 'uptime', '-p');
+  await spawn('ssh', ...verboseSSHArg, 'runtime-server', 'uptime', '-p');
+
+  if (verbosity > 1) verboseSpawnArg.push('--verbose');
 
   await spawn(
     'rsync',
-    ...verboseArg,
+    ...verboseSpawnArg,
 
     '--compress',
     '--links',
@@ -29,5 +32,5 @@ export async function prepareRemoteServer(): Promise<void> {
     'runtime-server:',
   );
 
-  await spawn('ssh', ...verboseArg, 'runtime-server', 'bash', 'setup.sh');
+  await spawn('ssh', ...verboseSSHArg, 'runtime-server', 'bash', 'setup.sh');
 }
