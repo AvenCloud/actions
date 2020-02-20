@@ -2,10 +2,11 @@ import {
   ensureFileIs,
   ensureFilesAre,
   ensureLinkIs,
+  exists,
   mkdir,
   chmod,
   unlink,
-  ensureFileContains,
+  copyFile,
 } from '../../utils/fs';
 import { spawn, exec } from '../../utils/spawn';
 
@@ -13,7 +14,7 @@ import { addAptDependencies } from './aptDependencies';
 import { readAvenConfig } from '../../utils/readAvenConfig';
 import { debug } from '../../utils/io';
 
-addAptDependencies('nginx', 'certbot');
+addAptDependencies('nginx', 'certbot', 'ssl-cert');
 
 // cSpell:ignore letsencrypt webroot
 
@@ -228,19 +229,25 @@ ssl_prefer_server_ciphers on;
       ),
     ),
 
+    // cSpell:ignore snakeoil
+
     // Make sure certificate files just exist for first run.
-    mkdir(`${letsencryptLive}/${domains[0]}`).then(() =>
-      Promise.all([
-        ensureFileContains(
-          `${letsencryptLive}/${domains[0]}/fullchain.pem`,
-          'CERTIFICATE',
-        ),
-        ensureFileContains(
-          `${letsencryptLive}/${domains[0]}/privkey.pem`,
-          'CERTIFICATE',
-        ),
-      ]),
-    ),
+    exists(`${letsencryptLive}/${domains[0]}/fullchain.pem`).then(existing => {
+      if (!existing) {
+        return mkdir(`${letsencryptLive}/${domains[0]}`).then(() =>
+          Promise.all([
+            copyFile(
+              '/etc/ssl/certs/ssl-cert-snakeoil.pem',
+              `${letsencryptLive}/${domains[0]}/fullchain.pem`,
+            ),
+            copyFile(
+              '/etc/ssl/private/ssl-cert-snakeoil.key',
+              `${letsencryptLive}/${domains[0]}/privkey.pem`,
+            ),
+          ]),
+        );
+      }
+    }),
   ]);
 }
 
