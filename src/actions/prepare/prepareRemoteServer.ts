@@ -16,6 +16,7 @@ export async function prepareRemoteServer(): Promise<void> {
     'rsync',
     ...verboseSpawnArg,
 
+    '--recursive',
     '--compress',
     '--links',
     '--executability',
