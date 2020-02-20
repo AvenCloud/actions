@@ -1,4 +1,4 @@
-import { ensureFileIs } from '../../utils/fs';
+import { ensureFileIs, ensureFileContains } from '../../utils/fs';
 import { spawn, exec } from '../../utils/spawn';
 import { readAvenConfig } from '../../utils/readAvenConfig';
 
@@ -32,6 +32,14 @@ export async function setupAptDependencies(): Promise<void> {
   addAptDependencies(...(config.runtimeAptDependencies ?? []));
 
   // cSpell:ignore noninteractive autoremove
+
+  const useNew = true;
+
+  const dpkgForceConfOptions = useNew
+    ? 'force-confnew'
+    : 'force-confdef\nforce-confold';
+
+  await ensureFileContains('/etc/dpkg/dpkg.cfg', `\n${dpkgForceConfOptions}\n`);
 
   await spawn(
     'apt-get',
