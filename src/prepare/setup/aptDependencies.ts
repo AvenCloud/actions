@@ -44,7 +44,10 @@ export async function setupAptDependencies(): Promise<void> {
   await spawn(
     'apt-get',
     // Avoid all interactive prompts https://serverfault.com/questions/227190
-    { stdio: 'inherit', env: { DEBIAN_FRONTEND: 'noninteractive' } },
+    {
+      stdio: 'inherit',
+      env: { ...process.env, DEBIAN_FRONTEND: 'noninteractive' },
+    },
     'install',
     '-yq',
     ...new Set(deps),
