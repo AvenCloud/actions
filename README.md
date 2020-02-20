@@ -38,6 +38,7 @@ jobs:
       - name: Deploy to Runtime Server
         uses: AvenCloud/actions/deploy@v1
         with:
+          deploy-key: ${{ secrets.DEPLOY_KEY }}
           deploy-directory: dist
 ```
 
@@ -116,6 +117,7 @@ jobs:
       - name: Use Aven Tools Deploy Action
         uses: AvenCloud/actions/deploy@v1
         with:
+          deploy-key: ${{ secrets.DEPLOY_KEY }}
           deploy-directory: dist
           verbosity: 3
 ```
@@ -123,11 +125,10 @@ jobs:
 ## New Server Setup
 
 1. Generate a new deploy key pair `(mkfifo key ...`
-2. Add keys to GitHub Secrets
+2. Add key to GitHub Secrets
    - `DEPLOY_KEY`
-   - `DEPLOY_KEY_PUB`
 3. Create new server instance
-   - Use generated key for `root` `authorized_keys`
+   - Use generated public key for `root` `authorized_keys`
    - get new server IP
 4. Create DNS entry for IP
 5. Add files to repo

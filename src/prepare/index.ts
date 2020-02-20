@@ -1,7 +1,7 @@
 import { setupNginx } from './setup/Nginx';
 import { setupMainServiceFiles } from './setup/MainServiceFiles';
 import { setupMonitoringTools } from './setup/MonitoringTools';
-import { setupDevTools } from './setup/DeveloperTools';
+// import { setupDevTools } from './setup/DeveloperTools';
 import { basicServerSetup } from './setup/basicServer';
 import { printOSInfo } from '../utils/printOSInfo';
 
@@ -14,7 +14,7 @@ export async function prepare(): Promise<void> {
   await Promise.all([
     setupMonitoringTools(),
 
-    setupDevTools(),
+    // setupDevTools(),
 
     setupNginx(),
 

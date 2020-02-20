@@ -2,7 +2,7 @@ import { ensureFileContains } from '../../utils/fs';
 import { setupRoot } from './Root';
 import { addAptDependencies } from './aptDependencies';
 
-addAptDependencies('screen', 'git', 'yarn');
+addAptDependencies('screen', 'git');
 
 export const screenConfig =
   "\ncaption always '%{= dg} %H %{G}| %{B}%l %{G}|%=%?%{d}%-w%?%{r}(%{d}%n %t%? {%u} %?%{r})%{d}%?%+w%?%=%{G}| %{B}%M %d %c:%s '\n";

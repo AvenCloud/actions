@@ -4,6 +4,9 @@ name: Aven Deploy
 description: Deploy an Aven project to a runtime server
 author: Cameron Tacklind <cameron@tacklind.com>
 inputs:
+  deploy-key:
+    required: true
+    description: The key to use to auth with
   deploy-directory:
     required: true
     description: Folder to copy to remote

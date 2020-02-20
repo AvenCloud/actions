@@ -19,6 +19,7 @@ export async function setupAptDependencies(): Promise<void> {
     '/etc/apt/sources.list.d/yarn.list',
     'deb https://dl.yarnpkg.com/debian/ stable main',
   );
+  addAptDependencies('yarn');
 
   await spawn('apt-get', 'update');
 
