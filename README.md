@@ -117,7 +117,7 @@ jobs:
         uses: AvenCloud/actions/deploy@v1
         with:
           deploy-directory: dist
-          # Options
+          verbosity: 3
 ```
 
 ## New Server Setup

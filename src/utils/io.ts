@@ -21,3 +21,17 @@ export function debug(...info: Parameters<typeof console.log>): void {
 
   console.log(...info);
 }
+
+export async function verbosityLevel(): Promise<0 | 1 | 2 | 3> {
+  const raw = await input('verbosity');
+
+  const level = parseInt(raw);
+
+  if (!isFinite(level)) throw new Error(`Invalid verbosity: ${raw}.`);
+  if (level < 0)
+    throw new RangeError(`Invalid verbosity: ${level}. 0 is minimum.`);
+  if (level > 3)
+    throw new RangeError(`Invalid verbosity: ${level}. 3 is maximum.`);
+
+  return level as 0 | 1 | 2 | 3;
+}
