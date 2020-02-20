@@ -39,7 +39,10 @@ export async function setupAptDependencies(): Promise<void> {
     ? 'force-confnew'
     : 'force-confdef\nforce-confold';
 
-  await ensureFileContains('/etc/dpkg/dpkg.cfg', `\n${dpkgForceConfOptions}\n`);
+  await ensureFileIs(
+    '/etc/dpkg/dpkg.cfg.d/force-conf.cfg',
+    `${dpkgForceConfOptions}\n`,
+  );
 
   await spawn(
     'apt-get',
