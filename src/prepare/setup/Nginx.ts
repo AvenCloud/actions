@@ -4,6 +4,7 @@ import {
   ensureLinkIs,
   mkdir,
   chmod,
+  unlink,
 } from '../../utils/fs';
 import { spawn, exec } from '../../utils/spawn';
 
@@ -398,7 +399,21 @@ export async function setupNginx(): Promise<void> {
   // Ensure Let's Encrypt configuration is setup
   await setupNginxBasic();
 
-  await checkNginxConfig();
+  const { domains } = await readAvenConfig();
+
+  await checkNginxConfig().catch(async () => {
+    // Something went wrong. Clear possible broken configs and try again.
+
+    // TODO: Only clear out failing configs
+    await Promise.all(
+      domains.map(domain =>
+        unlink(`/etc/nginx/servers/${domain}.conf`).catch(() => {}),
+      ),
+    );
+
+    await checkNginxConfig();
+    // If we fail again here, we've got bigger problems.
+  });
 
   await exec(`systemctl reload nginx.service`);
 

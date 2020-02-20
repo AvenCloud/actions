@@ -1,6 +1,16 @@
 import { promises as fs, PathLike } from 'fs';
 import { debug } from './io';
 
+export async function unlink(
+  ...args: Parameters<typeof fs.unlink>
+): Promise<void> {
+  const [path] = args;
+
+  debug('unlink:', path);
+
+  await fs.unlink(...args);
+}
+
 export async function chmod(
   ...args: Parameters<typeof fs.chmod>
 ): Promise<void> {
@@ -97,7 +107,7 @@ export async function ensureLinkIs(
 
   if (target === current) return false;
 
-  if (current !== undefined) await fs.unlink(path);
+  if (current !== undefined) await unlink(path);
 
   debug('Updating symlink', path, 'to point to', target);
 
