@@ -31,7 +31,7 @@ export async function setupAptDependencies(): Promise<void> {
   addAptDependencies(...(config.aptDependencies ?? []));
   addAptDependencies(...(config.runtimeAptDependencies ?? []));
 
-  // cSpell:ignore noninteractive autoremove
+  // cSpell:ignore noninteractive autoremove confnew confdef confold dpkg
 
   const useNew = true;
 
