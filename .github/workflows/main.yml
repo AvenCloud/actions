@@ -7,19 +7,11 @@ on:
 jobs:
   publish:
     name: Build, Check, and Publish (release)
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout latest code (using self)
         uses: AvenCloud/actions/checkout@v1
-
-      # - name: Checkout latest code (backup)
-      #   uses: actions/checkout@v1
-      # - name: Configure Npm
-      #   run: echo "color = always" >> "${HOME}/.npmrc"
-      # - name: Install Dependencies
-      #   run: npm install
 
       - name: Check - Code Format
         if: always()
@@ -39,7 +31,7 @@ jobs:
 
       - name: Publish to GitHub
         # Only publish if using release branch and all other steps succeed
-        if: github.ref == 'refs/heads/release'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/release'
         uses: peaceiris/actions-gh-pages@v2
         env:
           PUBLISH_BRANCH: v1
@@ -49,3 +41,14 @@ jobs:
           emptyCommits: false
           username: 'GitHub Action Static Build'
           #useremail: "actions@github.com"
+
+      # TODO: Step that moves `release` branch up to currently released ref and just publish master
+
+  self-test:
+    name: Self Smoke Test
+    runs-on: ubuntu-latest
+    needs: [publish]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/release'
+    steps:
+      - name: Self Test
+        uses: AvenCloud/actions/checkout@v1
