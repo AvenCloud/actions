@@ -3,7 +3,7 @@ import { platform } from 'os';
 import YarnOrNpm from 'yarn-or-npm';
 
 import restore from '../../utils/cache/restore';
-import { input } from '../../utils/inputs';
+import { input } from '../../utils/io';
 import { hashFiles } from '../../utils/hashFiles';
 import { spawn, exec } from '../../utils/spawn';
 import { readAvenConfig } from '../../utils/readAvenConfig';

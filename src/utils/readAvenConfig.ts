@@ -1,4 +1,5 @@
 import { promises } from 'fs';
+import { debug } from './io';
 const { readFile } = promises;
 
 type Config = {
@@ -85,6 +86,8 @@ export async function readAvenConfig(): Promise<Config> {
     }
 
     // TODO: Sanitize object more...
+
+    debug('Using aven config:', config);
   }
 
   return config;

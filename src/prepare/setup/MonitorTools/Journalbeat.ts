@@ -1,4 +1,4 @@
-import { ensureFileIs } from '../../../utils/Files';
+import { ensureFileIs } from '../../../utils/fs';
 import { exec } from '../../../utils/spawn';
 import { readAvenConfig } from '../../../utils/readAvenConfig';
 

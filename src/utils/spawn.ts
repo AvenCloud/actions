@@ -6,6 +6,7 @@ import {
 } from 'child_process';
 
 import { promisify } from 'util';
+import { debug } from './io';
 
 const defaultShell = '/bin/bash';
 
@@ -72,24 +73,33 @@ export function spawn(
   first: string | SpawnOptions | true,
   ...args: string[]
 ): PromiseWithChild<void> {
-  // console.log('Spawning:', command, ...args);
   const defOpts: SpawnOptions = { stdio: 'inherit' };
 
-  const proc =
-    typeof first === 'string'
-      ? nodeSpawn(command, [first, ...args], defOpts)
-      : nodeSpawn(
-          command,
-          args,
-          first === true
-            ? { ...defOpts, shell: defaultShell }
-            : { ...defOpts, ...first },
-        );
+  let opts: SpawnOptions;
+
+  if (typeof first === 'string') {
+    args.unshift(first);
+    opts = defOpts;
+  } else {
+    if (first === true) {
+      opts = { ...defOpts, shell: defaultShell };
+    } else {
+      opts = { ...defOpts, ...first };
+    }
+  }
+
+  debug('Spawning', command, args);
+
+  const proc = nodeSpawn(command, args, opts);
 
   const ret = new Promise((resolve, reject) => {
     proc.on('exit', exitCode => {
       if (exitCode) {
-        reject(new Error(`Exit code: ${exitCode}`));
+        const e = new Error(`Exit code: ${exitCode}`) as Error & {
+          exitCode: number;
+        };
+        e.exitCode = exitCode;
+        reject(e);
       } else {
         resolve();
       }
@@ -123,6 +133,8 @@ export function exec(
   stdout: string;
   stderr: string;
 }> {
+  debug('Exec:', command);
+
   if (shell === null) {
     return execP(command);
   }

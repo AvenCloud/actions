@@ -1,4 +1,4 @@
-import { ensureFileIs } from '../../utils/Files';
+import { ensureFileIs } from '../../utils/fs';
 import { spawn, exec } from '../../utils/spawn';
 
 const deps: string[] = [];

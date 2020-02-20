@@ -1,6 +1,6 @@
 import { promises } from 'fs';
 import ncc from '@zeit/ncc';
-import { ensureFileIs, ensureFilesAre, access } from '../utils/Files';
+import { ensureFileIs, ensureFilesAre, exists as access } from '../utils/fs';
 
 const { mkdir } = promises;
 

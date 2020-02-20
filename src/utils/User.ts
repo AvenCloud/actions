@@ -1,10 +1,7 @@
 import { join } from 'path';
-import { promises } from 'fs';
 
-import { ensureFileContains } from './Files';
+import { ensureFileContains, mkdir } from './fs';
 import { exec } from './spawn';
-
-const { mkdir } = promises;
 
 const userGroups = ['sudo', 'adm', 'systemd-journal'];
 

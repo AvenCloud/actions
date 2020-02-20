@@ -1,4 +1,4 @@
-import { ensureFileContains } from '../../utils/Files';
+import { ensureFileContains } from '../../utils/fs';
 import { setupRoot } from './Root';
 import { addAptDependencies } from './aptDependencies';
 

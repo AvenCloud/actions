@@ -1,9 +1,6 @@
-import { promises } from 'fs';
 import { exec } from '../../utils/spawn';
-import { ensureFileIs } from '../../utils/Files';
+import { ensureFileIs, mkdir } from '../../utils/fs';
 import { readAvenConfig } from '../../utils/readAvenConfig';
-
-const { mkdir } = promises;
 
 export async function setupMainServiceFiles(): Promise<void> {
   const config = await readAvenConfig();

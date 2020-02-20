@@ -1,4 +1,4 @@
-import { ensureFileContains } from '../../utils/Files';
+import { ensureFileContains } from '../../utils/fs';
 import { exec } from '../../utils/spawn';
 
 export async function setupSecurity(): Promise<void> {

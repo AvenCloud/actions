@@ -1,12 +1,9 @@
-import { input } from '../../utils/inputs';
+import { input } from '../../utils/io';
 import { prepareRemoteServer } from '../prepare/prepareRemoteServer';
 import { reportError } from '../../utils/reportError';
 import { spawn, exec } from '../../utils/spawn';
-import { promises } from 'fs';
+import { mkdir, ensureFileIs, ensureFileContains } from '../../utils/fs';
 import { readAvenConfig } from '../../utils/readAvenConfig';
-import { ensureFileIs, ensureFileContains } from '../../utils/Files';
-
-const { mkdir } = promises;
 
 async function setupShhConfig(): Promise<void> {
   await mkdir(`${process.env.HOME}/.ssh`, { recursive: true });

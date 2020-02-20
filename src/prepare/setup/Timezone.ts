@@ -1,4 +1,4 @@
-import { ensureLinkIs } from '../../utils/Files';
+import { ensureLinkIs } from '../../utils/fs';
 import { readAvenConfig } from '../../utils/readAvenConfig';
 
 export async function setupTimezone(): Promise<void> {

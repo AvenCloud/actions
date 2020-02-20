@@ -1,11 +1,14 @@
-import { ensureFileIs, ensureFilesAre, ensureLinkIs } from '../../utils/Files';
+import {
+  ensureFileIs,
+  ensureFilesAre,
+  ensureLinkIs,
+  mkdir,
+  chmod,
+} from '../../utils/fs';
 import { spawn, exec } from '../../utils/spawn';
-import { promises } from 'fs';
 
 import { addAptDependencies } from './aptDependencies';
 import { readAvenConfig } from '../../utils/readAvenConfig';
-
-const { mkdir, chmod } = promises;
 
 addAptDependencies('nginx', 'certbot');
 

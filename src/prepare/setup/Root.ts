@@ -1,11 +1,9 @@
-import { ensureFileIs } from '../../utils/Files';
+import { ensureFileIs, mkdir } from '../../utils/fs';
 import { request } from '../../utils/request';
 import { fixKnownHosts, userHome } from '../../utils/User';
 import { join } from 'path';
 
-import { promises } from 'fs';
 import { readAvenSecrets } from '../../utils/readSecrets';
-const { mkdir } = promises;
 
 export async function fixAuthorizedKeys(
   user: string,

@@ -1,6 +1,9 @@
 import { get as nodeGetHttps } from 'https';
+import { debug } from './io';
 
 export async function request(httpsUrl: string): Promise<string> {
+  debug('Request:', httpsUrl);
+
   return new Promise(async (resolve, reject) => {
     let response = '';
 
