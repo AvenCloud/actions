@@ -5,6 +5,7 @@ import {
   mkdir,
   chmod,
   unlink,
+  ensureFileContains,
 } from '../../utils/fs';
 import { spawn, exec } from '../../utils/spawn';
 
@@ -219,12 +220,24 @@ ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
 ssl_prefer_server_ciphers on;
 `;
 
-  await ensureFilesAre(
-    Object.entries(conf).map(([config, contents]) => ({
-      filename: `${dir}/${config}.conf`,
-      contents,
-    })),
-  );
+  await Promise.all([
+    ensureFilesAre(
+      Object.entries(conf).map(([config, contents]) => ({
+        filename: `${dir}/${config}.conf`,
+        contents,
+      })),
+    ),
+
+    // Make sure certificate files just exist for first run.
+    ensureFileContains(
+      `${letsencryptLive}/${domains[0]}/fullchain.pem`,
+      'CERTIFICATE',
+    ),
+    ensureFileContains(
+      `${letsencryptLive}/${domains[0]}/privkey.pem`,
+      'CERTIFICATE',
+    ),
+  ]);
 }
 
 async function setupNginxBasicServers(): Promise<void> {
