@@ -33,5 +33,17 @@ export async function prepareRemoteServer(): Promise<void> {
     'runtime-server:',
   );
 
-  await spawn('ssh', ...verboseSSHArg, 'runtime-server', 'bash', 'setup.sh');
+  await spawn(
+    'ssh',
+
+    ...verboseSSHArg,
+
+    'runtime-server',
+
+    'bash',
+
+    'setup.sh',
+
+    '--gh-actions',
+  );
 }
