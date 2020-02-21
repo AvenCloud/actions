@@ -122,6 +122,7 @@ jobs:
         with:
           deploy-key: ${{ secrets.DEPLOY_KEY }}
           deploy-directory: dist
+          service-configs: secrets.conf configs.conf
           verbosity: 3
 ```
 

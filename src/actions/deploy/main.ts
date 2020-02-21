@@ -71,6 +71,28 @@ async function copySources(): Promise<void> {
   );
 }
 
+async function copyServiceConfigs(): Promise<void> {
+  const configs = (await input('service-configs')).split(' ');
+
+  const config = await readAvenConfig();
+
+  const serviceName = config.serviceName ?? config.domains[0];
+
+  await spawn(
+    'rsync',
+
+    // Delete extraneous files on destination, even if IO errors occur
+    '--delete',
+    '--ignore-errors',
+
+    // Local files to copy
+    ...configs,
+
+    // Remote runtime server and destination
+    `runtime-server:/etc/systemd/system/${serviceName}.d/`,
+  );
+}
+
 async function restartApplication(): Promise<void> {
   const config = await readAvenConfig();
 
@@ -96,6 +118,8 @@ export async function main(): Promise<void> {
   // TODO: Secrets
 
   await prepareRemoteServer();
+
+  await copyServiceConfigs();
 
   await copySources();
 
