@@ -11,6 +11,10 @@ inputs:
     required: false
     description: Folder to copy to remote
     default: '.'
+  service-configs:
+    required: false
+    description: List of files to put into service config dir
+    default: ''
   verbosity:
     required: false
     description: Control verbosity when running
