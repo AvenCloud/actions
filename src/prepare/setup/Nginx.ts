@@ -43,7 +43,7 @@ type FileList = { [filename: string]: string };
 async function setupNginxSnips(): Promise<void> {
   const dir = '/etc/nginx/snips';
 
-  await mkdir(dir, { recursive: true });
+  await mkdir(dir);
 
   const snips = {} as FileList;
 
@@ -247,7 +247,7 @@ ssl_prefer_server_ciphers on;
 async function setupNginxBasicServers(): Promise<void> {
   const dir = '/etc/nginx/servers';
 
-  await mkdir(dir, { recursive: true });
+  await mkdir(dir);
 
   const serverConfigDefault = `server {
       listen 80;
@@ -270,7 +270,7 @@ async function setupNginxBasicServers(): Promise<void> {
 async function setupNginxServersFull(): Promise<void> {
   const { rootPath, domains, serviceName } = await readAvenConfig();
 
-  if (rootPath) await mkdir(rootPath, { recursive: true });
+  if (rootPath) await mkdir(rootPath);
 
   const upstreamUniqueName = domains[0].replace('.', '_');
 
@@ -359,7 +359,7 @@ async function setupCertbot(): Promise<void> {
 
   await Promise.all([
     ensureFileIs('/etc/letsencrypt/cli.ini', certbotCliConfig),
-    mkdir(certbotWebrootPath, { recursive: true }),
+    mkdir(certbotWebrootPath),
   ]);
 
   /**

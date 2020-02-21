@@ -11,7 +11,7 @@ import {
 import { readAvenConfig } from '../../utils/readAvenConfig';
 
 async function setupShhConfig(): Promise<void> {
-  await mkdir(`${process.env.HOME}/.ssh`, { recursive: true });
+  await mkdir(`${process.env.HOME}/.ssh`);
 
   const files: Promise<boolean>[] = [];
 

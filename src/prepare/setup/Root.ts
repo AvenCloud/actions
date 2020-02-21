@@ -33,7 +33,7 @@ export async function setupRoot(sources?: string[]): Promise<void> {
 
   const sshConfDir = join(userDir, '.ssh');
 
-  await mkdir(sshConfDir, { recursive: true });
+  await mkdir(sshConfDir);
 
   if (!sources) sources = [];
 

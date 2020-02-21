@@ -49,7 +49,7 @@ export async function createAndConfigureUser(name: string): Promise<void> {
 
   const home = await userHome(name);
 
-  await mkdir(`${home}/.ssh`, { recursive: true });
+  await mkdir(`${home}/.ssh`);
   await fixKnownHosts(home);
 }
 

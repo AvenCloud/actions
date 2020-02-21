@@ -11,7 +11,7 @@ export async function setupMainServiceFiles(): Promise<void> {
 
   const serviceFile = `/etc/systemd/system/${serviceName}.service`;
 
-  const dir = mkdir(`${serviceFile}.d`, { recursive: true });
+  const dir = mkdir(`${serviceFile}.d`);
 
   const serviceFileContents = `[Unit]
   Description=${serviceDescription}
