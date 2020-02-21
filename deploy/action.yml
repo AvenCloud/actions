@@ -8,8 +8,9 @@ inputs:
     required: true
     description: The key to use to auth with
   deploy-directory:
-    required: true
+    required: false
     description: Folder to copy to remote
+    default: '.'
   verbosity:
     required: false
     description: Control verbosity when running
