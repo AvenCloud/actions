@@ -11,7 +11,8 @@ export async function setupMainServiceFiles(): Promise<void> {
 
   const serviceFile = `/etc/systemd/system/${serviceName}.service`;
 
-  const dir = mkdir(`${serviceFile}.d`);
+  const dir1 = mkdir(`${serviceFile}.d`);
+  const dir2 = mkdir(`/opt/aven`);
 
   const serviceFileContents = `[Unit]
   Description=${serviceDescription}
@@ -37,5 +38,5 @@ export async function setupMainServiceFiles(): Promise<void> {
   // Run service on server boot
   await exec(`systemctl enable ${serviceName}.service`);
 
-  await dir;
+  await Promise.all([dir1, dir2]);
 }
