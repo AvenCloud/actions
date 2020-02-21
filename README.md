@@ -39,7 +39,6 @@ jobs:
         uses: AvenCloud/actions/deploy@v1
         with:
           deploy-key: ${{ secrets.DEPLOY_KEY }}
-          deploy-directory: dist
 ```
 
 ### Aven Config
