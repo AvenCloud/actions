@@ -226,8 +226,8 @@ map $http_forwarded $proxy_add_forwarded {
 ##
 
 # Default keys. Overridden in server configs.
-ssl_certificate     ${letsencryptLive}/${domains[0]}/fullchain.pem;
-ssl_certificate_key ${letsencryptLive}/${domains[0]}/privkey.pem;
+ssl_certificate     ${keys.public};
+ssl_certificate_key ${keys.private};
 
 
 ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
