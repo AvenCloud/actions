@@ -62,7 +62,7 @@ async function copySources(): Promise<void> {
     '--delete',
     '--executability',
     dir,
-    `runtime-server:/opt/${serviceName}`,
+    `runtime-server:/opt/aven/${serviceName}`,
   );
 }
 

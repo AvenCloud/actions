@@ -21,7 +21,7 @@ export async function setupMainServiceFiles(): Promise<void> {
   Type=simple
   Environment=LISTEN_PATH="/run/${serviceName}/sock"
   RuntimeDirectory=${serviceName}
-  WorkingDirectory=/opt/${serviceName}
+  WorkingDirectory=/opt/aven/${serviceName}
   ExecStart=${startServerCommand}
   User=www-data
   
