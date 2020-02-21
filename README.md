@@ -24,7 +24,7 @@ A minimal, but complete, example `workflow.yml`:
 on: push
 jobs:
   my-job:
-    runs-on: ubuntu-latest # Anything should work
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Latest
         uses: AvenCloud/actions/checkout@v1
