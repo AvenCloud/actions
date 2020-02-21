@@ -107,6 +107,8 @@ async function copyServiceConfigs(): Promise<void> {
     // Remote runtime server and destination
     `runtime-server:/etc/systemd/system/${serviceName}.service.d/`,
   );
+
+  await spawn('ssh', 'runtime-server', 'systemctl', 'daemon-reload');
 }
 
 async function restartApplication(): Promise<void> {
