@@ -62,11 +62,25 @@ async function copySources(): Promise<void> {
 
   await spawn(
     'rsync',
+
+    // Default gzip compression speeds up deploy
+    '--compress',
+
+    // Source source recursively
     '--recursive',
+
+    // Preserve symlinks and executability
     '--links',
-    '--delete',
     '--executability',
+
+    // Delete extraneous files on destination, even if IO errors occur
+    '--delete',
+    '--ignore-errors',
+
+    // Local files to copy
     dir,
+
+    // Remote runtime server and destination
     `runtime-server:/opt/aven/${serviceName}`,
   );
 }
