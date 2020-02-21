@@ -6,7 +6,6 @@ import {
   mkdir,
   chmod,
   unlink,
-  copyFile,
 } from '../../utils/fs';
 import { spawn, exec } from '../../utils/spawn';
 
@@ -138,6 +137,22 @@ async function setupNginxConfigs(): Promise<void> {
 
   const { domains } = await readAvenConfig();
 
+  const keys: { private: string; public: string } = {
+    // cSpell:ignore snakeoil
+    public: '/etc/ssl/certs/ssl-cert-snakeoil.pem',
+    private: '/etc/ssl/private/ssl-cert-snakeoil.key',
+  };
+
+  // Only use real certs if they exist.
+  await exists(`${letsencryptLive}/${domains[0]}/fullchain.pem`).then(
+    existing => {
+      if (existing) {
+        keys.public = `${letsencryptLive}/${domains[0]}/fullchain.pem`;
+        keys.private = `${letsencryptLive}/${domains[0]}/privkey.pem`;
+      }
+    },
+  );
+
   const conf = {} as FileList;
 
   conf.basic = `sendfile on;
@@ -219,36 +234,14 @@ ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
 ssl_prefer_server_ciphers on;
 `;
 
-  await Promise.all([
-    mkdir(dir).then(() =>
-      ensureFilesAre(
-        Object.entries(conf).map(([config, contents]) => ({
-          filename: `${dir}/${config}.conf`,
-          contents,
-        })),
-      ),
+  await mkdir(dir).then(() =>
+    ensureFilesAre(
+      Object.entries(conf).map(([config, contents]) => ({
+        filename: `${dir}/${config}.conf`,
+        contents,
+      })),
     ),
-
-    // cSpell:ignore snakeoil
-
-    // Make sure certificate files just exist for first run.
-    exists(`${letsencryptLive}/${domains[0]}/fullchain.pem`).then(existing => {
-      if (!existing) {
-        return mkdir(`${letsencryptLive}/${domains[0]}`).then(() =>
-          Promise.all([
-            copyFile(
-              '/etc/ssl/certs/ssl-cert-snakeoil.pem',
-              `${letsencryptLive}/${domains[0]}/fullchain.pem`,
-            ),
-            copyFile(
-              '/etc/ssl/private/ssl-cert-snakeoil.key',
-              `${letsencryptLive}/${domains[0]}/privkey.pem`,
-            ),
-          ]),
-        );
-      }
-    }),
-  ]);
+  );
 }
 
 async function setupNginxBasicServers(): Promise<void> {
