@@ -95,6 +95,8 @@ async function copyServiceConfigs(): Promise<void> {
   await spawn(
     'rsync',
 
+    '--recursive',
+
     // Delete extraneous files on destination, even if IO errors occur
     '--delete',
     '--ignore-errors',
