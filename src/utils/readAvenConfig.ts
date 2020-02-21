@@ -19,6 +19,11 @@ type Config = {
   serviceDescription?: string;
 
   /**
+   * Command used to start the server.
+   */
+  startServerCommand?: string;
+
+  /**
    * Directory inside built application that should be served as static files by Nginx.
    */
   rootPath?: string;

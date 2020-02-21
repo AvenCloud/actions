@@ -52,6 +52,7 @@ This file describes how to setup your app on a Debian environment.
 {
   "domains": ["my.domain.com", "www.my.domain.com", "alternate.domain.com"],
   "serviceName": "my-systemd-service",
+  "startServerCommand": "/usr/bin/npm start",
   "timezone": "America/Los_Angeles",
   "aptDependencies": [],
   "runtimeAptDependencies": []

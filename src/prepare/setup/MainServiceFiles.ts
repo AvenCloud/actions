@@ -7,6 +7,7 @@ export async function setupMainServiceFiles(): Promise<void> {
 
   const serviceName = config.serviceName ?? config.domains[0];
   const serviceDescription = config.serviceDescription ?? 'Runtime server';
+  const startServerCommand = config.startServerCommand ?? '/usr/bin/npm start';
 
   const serviceFile = `/etc/systemd/system/${serviceName}.service`;
 
@@ -21,7 +22,7 @@ export async function setupMainServiceFiles(): Promise<void> {
   Environment=LISTEN_PATH="/run/${serviceName}/sock"
   RuntimeDirectory=${serviceName}
   WorkingDirectory=/opt/${serviceName}
-  ExecStart=/usr/bin/npm start
+  ExecStart=${startServerCommand}
   User=www-data
   
   [Install]
