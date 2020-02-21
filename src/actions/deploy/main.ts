@@ -2,7 +2,12 @@ import { input } from '../../utils/io';
 import { prepareRemoteServer } from '../prepare/prepareRemoteServer';
 import { reportError } from '../../utils/reportError';
 import { spawn, exec } from '../../utils/spawn';
-import { mkdir, ensureFileIs, ensureFileContains } from '../../utils/fs';
+import {
+  mkdir,
+  ensureFileIs,
+  ensureFileContains,
+  exists,
+} from '../../utils/fs';
 import { readAvenConfig } from '../../utils/readAvenConfig';
 
 async function setupShhConfig(): Promise<void> {
@@ -67,19 +72,22 @@ async function copySources(): Promise<void> {
 }
 
 async function restartApplication(): Promise<void> {
-  console.log('restart');
+  const config = await readAvenConfig();
 
-  // TODO: ssh runtime-server systemctl stop serviceName
+  const serviceName = config.serviceName ?? config.domains[0];
+
+  await spawn('ssh', 'runtime-server', 'systemctl', 'stop', serviceName);
+
   // TODO: migrate db
-  /*
-        - name: Test if server needs a restart
-        id: reboot
-        shell: bash {0}
-        run: |
-          ssh runtime-server \[ -e /var/run/reboot-required \]
-          echo "::set-output name=required::$?"
-  */
-  // TODO: Restart one way or the other
+
+  if (await exists('/var/run/reboot-required')) {
+    await spawn('ssh', 'runtime-server', 'reboot').catch(e => {
+      console.log('Error doing remote server reboot. Probably ok.');
+      console.log(e);
+    });
+  } else {
+    await spawn('ssh', 'runtime-server', 'systemctl', 'start', serviceName);
+  }
 }
 
 export async function main(): Promise<void> {
