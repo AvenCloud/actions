@@ -51,7 +51,7 @@ Host runtime-server
   await Promise.all(files);
 }
 
-// cSpell:ignore rsync executability
+// cSpell:ignore executability
 
 async function copySources(): Promise<void> {
   const dir = await input('deploy-directory');
