@@ -105,7 +105,7 @@ async function copyServiceConfigs(): Promise<void> {
     ...configs,
 
     // Remote runtime server and destination
-    `runtime-server:/etc/systemd/system/${serviceName}.d/`,
+    `runtime-server:/etc/systemd/system/${serviceName}.service.d/`,
   );
 }
 
