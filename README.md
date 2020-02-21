@@ -58,6 +58,9 @@ This file describes how to setup your app on a Debian environment.
 }
 ```
 
+`domains` is the only **required** option.
+The rest have sensible defaults.
+
 ### Secrets
 
 A couple secrets need to be added to GitHub as well:
