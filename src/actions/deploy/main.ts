@@ -86,7 +86,11 @@ async function copySources(): Promise<void> {
 }
 
 async function copyServiceConfigs(): Promise<void> {
-  const configs = (await input('service-configs')).split(' ');
+  const configsRaw = await input('service-configs');
+
+  if (!configsRaw) return;
+
+  const configs = configsRaw.split(' ');
 
   const config = await readAvenConfig();
 
