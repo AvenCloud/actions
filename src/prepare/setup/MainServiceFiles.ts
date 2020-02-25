@@ -17,20 +17,20 @@ export async function setupMainServiceFiles(): Promise<void> {
   const dir3 = mkdir(HomeDir).then(() => chmod(HomeDir, 0o700));
 
   const serviceFileContents = `[Unit]
-  Description=${serviceDescription}
-  After=network.target
-  
-  [Service]
-  Type=simple
-  Environment=LISTEN_PATH="/run/${serviceName}/sock"
-  RuntimeDirectory=${serviceName}
-  WorkingDirectory=/opt/aven/${serviceName}
-  ExecStart=${startServerCommand}
-  echo Environment=HOME="${HomeDir}"
-  User=www-data
-  
-  [Install]
-  WantedBy=default.target
+Description=${serviceDescription}
+After=network.target
+
+[Service]
+Type=simple
+Environment=LISTEN_PATH="/run/${serviceName}/sock"
+RuntimeDirectory=${serviceName}
+WorkingDirectory=/opt/aven/${serviceName}
+ExecStart=${startServerCommand}
+Environment=HOME="${HomeDir}"
+User=www-data
+
+[Install]
+WantedBy=default.target
   `;
 
   await ensureFileIs(serviceFile, serviceFileContents);
