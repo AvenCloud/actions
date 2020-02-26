@@ -379,30 +379,44 @@ cat ${letsencryptLive}/$YOURDOMAIN/{privkey,fullchain}.pem > ${outputFile}
 
   // TODO: Support multiple independent domains that serve different websites.
 
-  // Run once for each nginx server. Generates one key pair. Must include all domains that share server.
-  await spawn(
-    'certbot',
+  async function doCertbot(): Promise<void> {
+    // Run once for each nginx server. Generates one key pair. Must include all domains that share server.
+    await spawn(
+      'certbot',
 
-    // cSpell:ignore certonly
-    'certonly',
+      // cSpell:ignore certonly
+      'certonly',
 
-    '--expand',
+      '--expand',
 
-    '--noninteractive',
+      '--noninteractive',
 
-    '--agree-tos',
+      '--agree-tos',
 
-    // Registered e-mail
-    '-m',
-    // TODO: use better email
-    `admin@${domains[0]}`,
+      // Registered e-mail
+      '-m',
+      // TODO: use better email
+      `admin@${domains[0]}`,
 
-    // Add a "--domain" before each domain
-    ...domains.reduce<string[]>(
-      (res, current) => res.concat('--domain', current),
-      [],
-    ),
-  );
+      // Add a "--domain" before each domain
+      ...domains.reduce<string[]>(
+        (res, current) => res.concat('--domain', current),
+        [],
+      ),
+    );
+  }
+
+  await doCertbot().catch(async () => {
+    // Sometimes, certbot is running on the runtime server (because of automatic certificate renewal with Systemd timer)
+    // When that happens, the executable fails. So, let's just wait 15 seconds and try again.
+    // If it fails *again*, for developer to manually re-run to fix.
+
+    // TODO: test if correct error code
+
+    await new Promise(resolve => setTimeout(resolve, 15e3));
+
+    return doCertbot();
+  });
 
   // Running certbot creates the renewal folders we need
   const hook = '/etc/letsencrypt/renewal-hooks/deploy/reload-nginx';
