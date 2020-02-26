@@ -90,6 +90,8 @@ export async function prepareRemoteServer(): Promise<void> {
   const prepare = spawn(
     'ssh',
 
+    { stdio: ['pipe', 'inherit', 'inherit'] },
+
     ...verboseSSHArg,
 
     'runtime-server',
