@@ -12,7 +12,7 @@ else
 fi
 
 # Install npm dependencies if we decide to start copying a package.json too
-[ -e package.json ] && npm ci
+#[ -e package.json ] && npm ci
 
 echo "Running Node..."
 
