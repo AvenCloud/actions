@@ -78,7 +78,7 @@ async function copySources(): Promise<void> {
 }
 
 async function copyServiceConfigs(): Promise<void> {
-  const configsRaw = await input('service-configs');
+  const configsRaw = await input('service-config-files');
 
   if (!configsRaw) return;
 
