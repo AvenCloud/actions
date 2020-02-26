@@ -12,9 +12,9 @@ else
 fi
 
 # Install npm dependencies if we decide to start copying a package.json too
-[ -e package.json ] && npm ci
+#[ -e package.json ] && npm ci
 
 echo "Running Node..."
 
 # Run our prepare script on server. Expect config to be passed in via stdin as JSON
-/usr/bin/node "$(dirname "$0")/index.js" "$@" < &0
+/usr/bin/node "$(dirname "$0")/index.js" "$@" <&0
