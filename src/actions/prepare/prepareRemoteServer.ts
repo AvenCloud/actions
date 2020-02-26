@@ -103,7 +103,7 @@ export async function prepareRemoteServer(): Promise<void> {
 
   if (!prepare.child.stdin) throw new Error('missing stdin???');
 
-  prepare.child.stdin.write(JSON.stringify(await getConfig()));
+  prepare.child.stdin.end(JSON.stringify(await getConfig()));
 
   await prepare;
 }
