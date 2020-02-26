@@ -1,6 +1,6 @@
 import { ensureFileIs } from '../../../utils/fs';
 import { exec } from '../../../utils/spawn';
-import { readAvenConfig } from '../../../utils/readAvenConfig';
+import { readAvenConfig } from '../readAvenConfig';
 
 export async function setupJournalbeat(): Promise<void> {
   const { journalbeat } = await readAvenConfig();

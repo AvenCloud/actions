@@ -11,7 +11,6 @@ export async function buildPrepareScript(): Promise<void> {
     sourceMap: true,
     quiet: true,
     minify: true,
-    externals: ['./aven.json', './secrets.json'],
     filterAssetBase: './src/',
   });
 

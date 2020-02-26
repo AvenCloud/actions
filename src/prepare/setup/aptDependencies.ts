@@ -1,6 +1,6 @@
 import { ensureFileIs } from '../../utils/fs';
 import { spawn, exec } from '../../utils/spawn';
-import { readAvenConfig } from '../../utils/readAvenConfig';
+import { readAvenConfig } from './readAvenConfig';
 
 const deps: string[] = [];
 

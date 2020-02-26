@@ -38,28 +38,9 @@ jobs:
       - name: Deploy to Runtime Server
         uses: AvenCloud/actions/deploy@v1
         with:
+          domains: example.com
           deploy-key: ${{ secrets.DEPLOY_KEY }}
 ```
-
-### Aven Config
-
-Create a file `aven.json` at the top level of your project.
-
-This file describes how to setup your app on a Debian environment.
-
-```json
-{
-  "domains": ["my.domain.com", "www.my.domain.com", "alternate.domain.com"],
-  "serviceName": "my-systemd-service",
-  "startServerCommand": "/usr/bin/npm start",
-  "timezone": "America/Los_Angeles",
-  "aptDependencies": [],
-  "runtimeAptDependencies": []
-}
-```
-
-`domains` is the only **required** option.
-The rest have sensible defaults.
 
 ### Secrets
 
@@ -72,7 +53,6 @@ Keys that will allow root access to server we're deploying to.
 Run this command on a linux bash shell to generate a new key pair.
 
 - `DEPLOY_KEY` _Example: `-----BEGIN RSA PRIVATE KEY-----\n...[lines of base64]...\n-----END RSA PRIVATE KEY-----`_
-- `DEPLOY_KEY_PUB` _Example: `ssh-rsa AAAAB...[base64]...m6Q== GitHub Action 2020-02-17`_
 
 <!-- cSpell:ignore mkfifo -->
 
@@ -120,6 +100,7 @@ jobs:
       - name: Use Aven Tools Deploy Action
         uses: AvenCloud/actions/deploy@v1
         with:
+          domains: example.com
           deploy-key: ${{ secrets.DEPLOY_KEY }}
           deploy-directory: dist
           service-configs: secrets.conf configs.conf
@@ -135,9 +116,7 @@ jobs:
    - Use generated public key for `root` `authorized_keys`
    - get new server IP
 4. Create DNS entry for IP
-5. Add files to repo
-   - `aven.json`
-   - GitHub Workflow
+5. Add workflow file to repo
 6. Commit & Push
 
 ## Development

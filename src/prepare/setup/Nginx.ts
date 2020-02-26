@@ -10,7 +10,7 @@ import {
 import { spawn, exec } from '../../utils/spawn';
 
 import { addAptDependencies } from './aptDependencies';
-import { readAvenConfig } from '../../utils/readAvenConfig';
+import { readAvenConfig } from './readAvenConfig';
 import { debug } from '../../utils/io';
 
 addAptDependencies('nginx', 'certbot', 'ssl-cert');
@@ -268,9 +268,9 @@ async function setupNginxBasicServers(): Promise<void> {
 }
 
 async function setupNginxServersFull(): Promise<void> {
-  const { rootPath, domains, serviceName } = await readAvenConfig();
+  const { webRootPath, domains, serviceName } = await readAvenConfig();
 
-  if (rootPath) await mkdir(rootPath);
+  if (webRootPath) await mkdir(webRootPath);
 
   const upstreamUniqueName = domains[0].replace('.', '_');
 
@@ -303,10 +303,10 @@ server {
     include snips/trust-cloudflare-ip.conf;
 
     location / ${
-      !rootPath
+      !webRootPath
         ? ''
         : `{
-      root ${rootPath};
+      root ${webRootPath};
       # If files exist in root, serve them. Otherwise fallback to proxy.
       try_files $uri $uri/index.html @proxyHandler;
     }

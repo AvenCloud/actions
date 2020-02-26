@@ -1,26 +1,18 @@
 import { ensureFileIs, mkdir } from '../../utils/fs';
-import { request } from '../../utils/request';
 import { fixKnownHosts, userHome } from '../../utils/User';
 import { join } from 'path';
 
-import { readAvenSecrets } from '../../utils/readSecrets';
-
-export async function fixAuthorizedKeys(
+export async function setAuthorizedKeys(
   user: string,
-  keySources: string[],
+  keys: string[],
 ): Promise<void> {
   const userDir = await userHome(user);
 
   const sshConfDir = join(userDir, '.ssh');
 
-  const { deployPublicKey } = await readAvenSecrets();
+  await mkdir(sshConfDir);
 
-  await Promise.all(keySources.map(async (url: string) => await request(url)))
-    .then(keys => [...keys, deployPublicKey, '']) // Empty string to ensure file ends in a newline
-    .then(keys => keys.join('\n'))
-    .then(allKeys =>
-      ensureFileIs(join(sshConfDir, 'authorized_keys'), allKeys),
-    );
+  ensureFileIs(join(sshConfDir, 'authorized_keys'), keys.join('\n'));
 }
 
 /**
@@ -41,6 +33,6 @@ export async function setupRoot(sources?: string[]): Promise<void> {
     // Make it easy for root user to clone from github
     fixKnownHosts(userDir),
 
-    fixAuthorizedKeys('root', sources ?? []),
+    setAuthorizedKeys('root', sources ?? []),
   ]);
 }

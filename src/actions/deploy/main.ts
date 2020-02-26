@@ -8,7 +8,8 @@ import {
   ensureFileContains,
   exists,
 } from '../../utils/fs';
-import { readAvenConfig } from '../../utils/readAvenConfig';
+import { getRuntimeHost } from '../../utils/getRuntimeHost';
+import { getServiceName } from '../../utils/getServiceName';
 
 async function setupShhConfig(): Promise<void> {
   await mkdir(`${process.env.HOME}/.ssh`);
@@ -25,11 +26,11 @@ async function setupShhConfig(): Promise<void> {
 
   files.push(ensureFileIs(identityFile, deployKey, 0o600));
 
-  const host = (await readAvenConfig()).domains[0];
-
   // cSpell:ignore keyscan
 
-  const hostKeys = (await exec(`ssh-keyscan ${host}`)).stdout;
+  const runtimeHost = await getRuntimeHost();
+
+  const hostKeys = (await exec(`ssh-keyscan ${runtimeHost}`)).stdout;
 
   console.log('Using host keys:');
   console.log(hostKeys);
@@ -40,7 +41,7 @@ async function setupShhConfig(): Promise<void> {
 
   const config = `
 Host runtime-server
-  HostName ${host}
+  HostName ${runtimeHost}
   Port 22
   User root
   CheckHostIP no
@@ -55,10 +56,6 @@ Host runtime-server
 
 async function copySources(): Promise<void> {
   const dir = await input('deploy-directory');
-
-  const config = await readAvenConfig();
-
-  const serviceName = config.serviceName ?? config.domains[0];
 
   await spawn(
     'rsync',
@@ -81,7 +78,7 @@ async function copySources(): Promise<void> {
     dir,
 
     // Remote runtime server and destination
-    `runtime-server:/opt/aven/${serviceName}`,
+    `runtime-server:/opt/aven/${await getServiceName()}`,
   );
 }
 
@@ -91,10 +88,6 @@ async function copyServiceConfigs(): Promise<void> {
   if (!configsRaw) return;
 
   const configs = configsRaw.split(' ');
-
-  const config = await readAvenConfig();
-
-  const serviceName = config.serviceName ?? config.domains[0];
 
   await spawn(
     'rsync',
@@ -109,16 +102,14 @@ async function copyServiceConfigs(): Promise<void> {
     ...configs,
 
     // Remote runtime server and destination
-    `runtime-server:/etc/systemd/system/${serviceName}.service.d/`,
+    `runtime-server:/etc/systemd/system/${await getServiceName()}.service.d/`,
   );
 
   await spawn('ssh', 'runtime-server', 'systemctl', 'daemon-reload');
 }
 
 async function restartApplication(): Promise<void> {
-  const config = await readAvenConfig();
-
-  const serviceName = config.serviceName ?? config.domains[0];
+  const serviceName = await getServiceName();
 
   await spawn('ssh', 'runtime-server', 'systemctl', 'stop', serviceName);
 

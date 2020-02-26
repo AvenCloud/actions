@@ -6,7 +6,6 @@ import restore from '../../utils/cache/restore';
 import { input } from '../../utils/io';
 import { hashFiles } from '../../utils/hashFiles';
 import { spawn, exec } from '../../utils/spawn';
-import { readAvenConfig } from '../../utils/readAvenConfig';
 import { reportError } from '../../utils/reportError';
 
 export async function main(): Promise<void> {
@@ -46,16 +45,15 @@ export async function main(): Promise<void> {
   // Install system dependencies
   //
 
-  const config = await readAvenConfig().catch(e => {
-    console.log('Error reading `aven.json`.');
-    console.log(e);
-    console.log('Might be ok to continue...');
-  });
+  const aptDeps = await input('apt-dependencies');
 
-  if (config) {
-    if (config.aptDependencies) {
-      await spawn('apt-get', 'install', '-y', ...config.aptDependencies);
-    }
+  if (aptDeps) {
+    await spawn(
+      'apt-get',
+      'install',
+      '-y',
+      ...aptDeps.split(/\s/).filter(s => s),
+    );
   }
   // TODO: Support more than just apt packages?
 

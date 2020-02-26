@@ -1,13 +1,23 @@
 import { setupTimezone } from './Timezone';
 import { setupAptDependencies } from './aptDependencies';
 import { setupSecurity } from './Security';
+import { readAvenConfig } from './readAvenConfig';
+import { setAuthorizedKeys } from './Root';
 
 export async function basicServerSetup(): Promise<void> {
-  await setupSecurity();
+  await Promise.all([
+    setupSecurity(),
 
-  await setupTimezone();
+    readAvenConfig()
+      .then(c => c.authorizedKeys)
+      .then(async keys => {
+        if (keys.length) return setAuthorizedKeys('root', keys);
+      }),
 
-  // TODO: hostname, /etc/hosts
+    setupTimezone(),
+
+    // TODO: hostname, /etc/hosts
+  ]);
 
   await setupAptDependencies();
 }
