@@ -4,17 +4,70 @@ name: Aven Deploy
 description: Deploy an Aven project to a runtime server
 author: Cameron Tacklind <cameron@tacklind.com>
 inputs:
+  domains:
+    required: true
+    description: |
+      Whitespace separated list of domain names to use.
+      The first one is the primary domain.
+      All requests will be redirected to this domain by nginx.
+
   deploy-key:
     required: true
     description: The key to use to auth with
+
+  extra-keys:
+    required: false
+    description: List of keys to add to authorized_keys on runtime server
+    default: ''
+
   deploy-directory:
     required: false
     description: Folder to copy to remote
-    default: '.'
+    default: '.' # Maybe dist?
+
+  service-name:
+    required: false
+    description: What to call the Systemd service that runs this process
+    default: '' # Uses the first domain name
+
+  service-description:
+    required: false
+    description: Systemd service description
+    default: ''
+  start-server-command:
+    required: false
+    description: The command to run, with the code as the working directory.
+    default: /usr/bin/npm start
   service-configs:
     required: false
-    description: List of files to put into service config dir
+    description: |
+      Extra lines to put in Systemd config
+      Use to extend the Aven Systemd service implementation
     default: ''
+  service-config-files:
+    required: false
+    description: |
+      List of files to put into service config dir.
+      Use to extend the Aven Systemd service implementation
+    default: ''
+
+  timezone:
+    required: false
+    description: |
+      Set the runtime server's timezone.
+      Must be one of "TZ database name".
+      See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
+    default: ''
+
+  apt-dependencies:
+    required: false
+    description: Apt dependencies to be installed for build or runtime
+    default: ''
+  runtime-apt-dependencies:
+    required: false
+    description: Apt dependencies to be installed for runtime only
+    default: ''
+
   verbosity:
     required: false
     description: Control verbosity when running

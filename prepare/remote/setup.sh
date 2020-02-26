@@ -16,5 +16,5 @@ fi
 
 echo "Running Node..."
 
-# If this is the last command, bash will use its exit status
-/usr/bin/node "$(dirname "$0")/index.js" "$@"
+# Run our prepare script on server. Expect config to be passed in via stdin as JSON
+/usr/bin/node "$(dirname "$0")/index.js" "$@" < &0
