@@ -1,5 +1,5 @@
 import { exec } from '../../utils/spawn';
-import { ensureFileIs, mkdir, chmod } from '../../utils/fs';
+import { ensureFileIs, mkdir, chmod, chown } from '../../utils/fs';
 import { readAvenConfig } from './readAvenConfig';
 
 export async function setupMainServiceFiles(): Promise<void> {
@@ -12,9 +12,23 @@ export async function setupMainServiceFiles(): Promise<void> {
   const serviceFile = `/etc/systemd/system/${serviceName}.service`;
   const HomeDir = `/var/lib/${serviceName}`;
 
+  const runtimeUser = 'www-data';
+  const runtimeUid = exec(`id -u ${runtimeUser}`);
+  const runtimeGid = exec(`id -g ${runtimeUser}`);
+
   const dir1 = mkdir(`${serviceFile}.d`);
   const dir2 = mkdir(`/opt/aven`);
-  const dir3 = mkdir(HomeDir).then(() => chmod(HomeDir, 0o700));
+  const dir3 = mkdir(HomeDir).then(
+    async () =>
+      await Promise.all([
+        chmod(HomeDir, 0o700),
+        chown(
+          HomeDir,
+          Number((await runtimeUid).stdout),
+          Number((await runtimeGid).stdout),
+        ),
+      ]),
+  );
 
   const serviceFileContents = `[Unit]
 Description=${serviceDescription}
@@ -27,7 +41,7 @@ RuntimeDirectory=${serviceName}
 WorkingDirectory=/opt/aven/${serviceName}
 ExecStart=${startServerCommand}
 Environment=HOME="${HomeDir}"
-User=www-data
+User=${runtimeUser}
 
 [Install]
 WantedBy=default.target

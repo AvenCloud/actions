@@ -11,6 +11,16 @@ export async function unlink(
   await fs.unlink(...args);
 }
 
+export async function chown(
+  ...args: Parameters<typeof fs.chown>
+): Promise<void> {
+  const [path, value] = args;
+
+  debug('chown:', path, 'to', value);
+
+  await fs.chown(...args);
+}
+
 export async function chmod(
   ...args: Parameters<typeof fs.chmod>
 ): Promise<void> {
