@@ -33,10 +33,12 @@
     "@actions/exec": "^1.0.3",
     "@actions/http-client": "^1.0.6",
     "@actions/io": "^1.0.2",
+    "github-username-regex": "^1.0.0",
     "ts-node": "^8.6.2",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
+    "@types/github-username-regex": "^1.0.0",
     "@types/js-yaml": "^3.12.2",
     "@types/node": "^13.7.0",
     "@types/rmfr": "^2.0.0",

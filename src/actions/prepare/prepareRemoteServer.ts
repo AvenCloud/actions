@@ -3,6 +3,8 @@ import { verbosityLevel, input } from '../../utils/io';
 import { Config } from '../../prepare/Config';
 import { getDomains } from '../../utils/getDomains';
 import { getServiceName } from '../../utils/getServiceName';
+import { request } from '../../utils/request';
+import githubUsernameRegex from 'github-username-regex';
 
 async function getAuthorizedDeployKey(): Promise<string> {
   const keyFile = `${process.env.HOME}/.ssh/id_rsa`;
@@ -14,18 +16,18 @@ async function getConfig(): Promise<Config> {
 
   ret.domains = await getDomains();
 
-  ret.authorizedKeys = [
-    await getAuthorizedDeployKey(),
-    // ...(await Promise.all(
-    //   (await input('extra-keys')).split(/\s/).map(
-    //     async (k): Promise<string[]> => {
-    //       if (k.match(/^[^/]+$/)) k = `https://github.com/${k}.keys`;
-    //       if (k.match(/^https:\/\//)) return (await request(k)).split(/\s/);
-    //       return [k];
-    //     },
-    //   ),
-    // )),
-  ];
+  ret.authorizedKeys = [await getAuthorizedDeployKey()];
+
+  const extra = (await input('extra-keys')).split('\n').map(async k => {
+    if (k.match(githubUsernameRegex)) k = `https://github.com/${k}.keys`;
+    if (k.match(/^https:\/\//)) return (await request(k)).split('\n');
+
+    return [k];
+  });
+
+  for (const keys of await Promise.all(extra)) {
+    ret.authorizedKeys.push(...keys.filter(s => s));
+  }
 
   ret.serviceName = await getServiceName();
 
