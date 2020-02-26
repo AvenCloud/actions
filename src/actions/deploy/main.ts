@@ -2,12 +2,7 @@ import { input } from '../../utils/io';
 import { prepareRemoteServer } from '../prepare/prepareRemoteServer';
 import { reportError } from '../../utils/reportError';
 import { spawn, exec } from '../../utils/spawn';
-import {
-  mkdir,
-  ensureFileIs,
-  ensureFileContains,
-  exists,
-} from '../../utils/fs';
+import { mkdir, ensureFileIs, ensureFileContains } from '../../utils/fs';
 import { getRuntimeHost } from '../../utils/getRuntimeHost';
 import { getServiceName } from '../../utils/getServiceName';
 
@@ -115,7 +110,12 @@ async function restartApplication(): Promise<void> {
 
   // TODO: migrate db
 
-  if (await exists('/var/run/reboot-required')) {
+  if (
+    await exec('ssh ls /var/run/reboot-required').then(
+      () => true,
+      () => false,
+    )
+  ) {
     await spawn('ssh', 'runtime-server', 'reboot').catch(e => {
       console.log('Error doing remote server reboot. Probably ok.');
       console.log(e);
