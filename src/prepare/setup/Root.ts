@@ -12,7 +12,7 @@ export async function setAuthorizedKeys(
 
   await mkdir(sshConfDir);
 
-  ensureFileIs(join(sshConfDir, 'authorized_keys'), keys.join('\n'));
+  ensureFileIs(join(sshConfDir, 'authorized_keys'), [...keys, ''].join('\n'));
 }
 
 /**
