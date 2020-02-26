@@ -5,9 +5,9 @@ import { readAvenConfig } from './readAvenConfig';
 export async function setupMainServiceFiles(): Promise<void> {
   const config = await readAvenConfig();
 
-  const serviceName = config.serviceName ?? config.domains[0];
+  const serviceName = config.serviceName;
   const serviceDescription = config.serviceDescription ?? 'Runtime server';
-  const startServerCommand = config.startServerCommand ?? '/usr/bin/npm start';
+  const startServerCommand = config.startServerCommand;
 
   const serviceFile = `/etc/systemd/system/${serviceName}.service`;
   const HomeDir = `/var/lib/${serviceName}`;
