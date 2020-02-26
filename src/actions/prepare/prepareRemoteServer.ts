@@ -5,9 +5,16 @@ import { getDomains } from '../../utils/getDomains';
 import { getServiceName } from '../../utils/getServiceName';
 import { request } from '../../utils/request';
 import githubUsernameRegex from 'github-username-regex';
+import { exists } from '../../utils/fs';
 
 async function getAuthorizedDeployKey(): Promise<string> {
   const keyFile = `${process.env.HOME}/.ssh/id_rsa`;
+  return (await exec(`ssh-keygen -y -f ${keyFile}`)).stdout.trim();
+}
+
+async function getAuthorizedDeployKeyNew(): Promise<string | undefined> {
+  const keyFile = `${process.env.HOME}/.ssh/id_rsa.2`;
+  if (!exists(keyFile)) return;
   return (await exec(`ssh-keygen -y -f ${keyFile}`)).stdout.trim();
 }
 
@@ -17,6 +24,10 @@ async function getConfig(): Promise<Config> {
   ret.domains = await getDomains();
 
   ret.authorizedKeys = [await getAuthorizedDeployKey()];
+
+  const newKey = await getAuthorizedDeployKeyNew();
+
+  if (newKey) ret.authorizedKeys.push(newKey);
 
   const extra = (await input('extra-keys')).split('\n').map(async k => {
     if (k.match(githubUsernameRegex)) k = `https://github.com/${k}.keys`;
