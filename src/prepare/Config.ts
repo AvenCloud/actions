@@ -4,20 +4,34 @@ export type Config = {
    */
   domains?: string[];
 
+  /**
+   * List of keys to set the root user's authorized keys to.
+   */
   authorizedKeys: string[];
 
   /**
-   * Name of systemd service to use, if not the default as chosen by workflow filename.
+   * Systemd Service configuration.
    */
-  serviceName: string;
-  /**
-   * Description of systemd service to use. Defaults to "".
-   */
-  serviceDescription?: string;
-  /**
-   * Command used to start the server.
-   */
-  startServerCommand?: string;
+  service: {
+    /**
+     * Name of systemd service to use, if not the default as chosen by workflow filename.
+     */
+    name: string;
+    /**
+     * Description of systemd service to use. Defaults to "".
+     */
+    description?: string;
+    /**
+     * Command used to start the server.
+     */
+    startServerCommand?: string;
+
+    /**
+     * Extra lines to add to service file.
+     */
+    extraConfigs?: string;
+  };
+
   /**
    * Directory inside built application that should be served as static files by Nginx.
    */

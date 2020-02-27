@@ -40,11 +40,15 @@ async function getConfig(): Promise<Config> {
     ret.authorizedKeys.push(...keys.filter(s => s));
   }
 
-  ret.serviceName = await getServiceName();
+  ret.service = {
+    name: await getServiceName(),
 
-  ret.serviceDescription = await input('service-description');
+    description: await input('service-description'),
 
-  ret.startServerCommand = await input('start-server-command');
+    startServerCommand: await input('start-server-command'),
+
+    extraConfigs: await input('service-configs'),
+  };
 
   // TODO
   ret.webRootPath;
@@ -77,7 +81,6 @@ async function getConfig(): Promise<Config> {
   }
 
   // TODO
-  await input('service-configs');
   await input('verbosity');
 
   return ret;

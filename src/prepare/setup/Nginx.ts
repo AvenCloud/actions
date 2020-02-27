@@ -270,7 +270,11 @@ async function setupNginxBasicServers(): Promise<void> {
 }
 
 async function setupNginxServersFull(): Promise<void> {
-  const { webRootPath, domains, serviceName } = await readAvenConfig();
+  const {
+    webRootPath,
+    domains,
+    service: { name: serviceName },
+  } = await readAvenConfig();
   if (!domains) throw new Error('Domains unset!');
 
   if (webRootPath) await mkdir(webRootPath);

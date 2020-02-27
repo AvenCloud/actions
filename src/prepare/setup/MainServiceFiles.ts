@@ -3,11 +3,12 @@ import { ensureFileIs, mkdir, chmod, chown } from '../../utils/fs';
 import { readAvenConfig } from './readAvenConfig';
 
 export async function setupMainServiceFiles(): Promise<void> {
-  const config = await readAvenConfig();
+  const { service } = await readAvenConfig();
 
-  const serviceName = config.serviceName;
-  const serviceDescription = config.serviceDescription ?? 'Runtime server';
-  const startServerCommand = config.startServerCommand;
+  const serviceName = service.name;
+  const serviceDescription = service.description ?? 'Runtime server';
+  const startServerCommand = service.startServerCommand;
+  const extraService = service.extraConfigs;
 
   const serviceFile = `/etc/systemd/system/${serviceName}.service`;
   const HomeDir = `/var/lib/${serviceName}`;
@@ -42,7 +43,7 @@ WorkingDirectory=/opt/aven/${serviceName}
 ExecStart=${startServerCommand}
 Environment=HOME="${HomeDir}"
 User=${runtimeUser}
-
+${extraService ? `\n${extraService}\n` : '\n'}
 [Install]
 WantedBy=default.target
   `;
