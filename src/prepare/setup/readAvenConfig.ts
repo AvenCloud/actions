@@ -24,21 +24,9 @@ process.stdin.on('end', () => {
 
   const parsed = JSON.parse(data);
 
-  if (!parsed.domains) {
-    throw new Error('`domains` not defined in `aven.json`.');
-  }
-
-  if (!Array.isArray(parsed.domains)) {
-    throw new Error('`domains` in `aven.json` is not an Array.');
-  }
-
-  if (parsed.domains.length < 1) {
-    throw new Error('Need at least one domain defined');
-  }
-
   debug('Using aven config:', parsed);
 
-  // TODO: Sanitize object more?
+  // TODO: Sanitize object?
 
   done(parsed);
 });
