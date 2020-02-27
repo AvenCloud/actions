@@ -1,4 +1,4 @@
-import { ensureFileIs } from '../../../utils/fs';
+import { ensureFileIs, mkdir } from '../../../utils/fs';
 import { exec } from '../../../utils/spawn';
 import { readAvenConfig } from '../readAvenConfig';
 
@@ -23,6 +23,20 @@ export async function setupJournalbeat(): Promise<void> {
   // TODO: Add to list of apt
 
   await exec('systemctl enable journalbeat');
+
+  const disableLogging = `
+[Service]
+Environment="BEAT_LOG_OPTS= "
+`;
+
+  const reload = mkdir('/lib/systemd/system/journalbeat.service.d')
+    .then(() =>
+      ensureFileIs(
+        '/lib/systemd/system/journalbeat.service.d/disable-logging.conf',
+        disableLogging,
+      ),
+    )
+    .then(() => exec('systemctl daemon-reload'));
 
   let journalbeatConfig = `journalbeat.inputs:
 - paths: []
@@ -98,6 +112,8 @@ output.logstash:
     '/etc/journalbeat/journalbeat.yml',
     journalbeatConfig,
   );
+
+  await reload;
 
   await exec(`systemctl ${change ? 'restart' : 'start'} journalbeat`);
 }
