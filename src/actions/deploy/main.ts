@@ -35,16 +35,17 @@ async function setupShhConfig(): Promise<void> {
   const runtimeHost = await getRuntimeHost();
   const runtimeHostPort = (await input('runtime-host-port')) || '22';
 
-  const hostKeys = (
-    await exec(`ssh-keyscan -p ${runtimeHostPort} ${runtimeHost}`)
-  ).stdout;
+  const hostKeys = await input('runtime-host-keys');
+  // (await exec(`ssh-keyscan -p ${runtimeHostPort} ${runtimeHost}`)).stdout;
 
-  console.log('Using host keys:');
-  console.log(hostKeys);
+  if (hostKeys) {
+    console.log('Adding host keys:');
+    console.log(hostKeys);
 
-  files.push(
-    ensureFileContains(`${process.env.HOME}/.ssh/known_hosts`, hostKeys),
-  );
+    files.push(
+      ensureFileContains(`${process.env.HOME}/.ssh/known_hosts`, hostKeys),
+    );
+  }
 
   const config = `
 Host runtime-server
@@ -52,6 +53,7 @@ Host runtime-server
   Port ${runtimeHostPort}
   User root
   CheckHostIP no
+  StrictHostKeyChecking no
 `;
 
   files.push(ensureFileContains(`${process.env.HOME}/.ssh/config`, config));
