@@ -51,13 +51,16 @@ inputs:
       Use to extend the Aven Systemd service implementation
     default: ''
 
+  runtime-host:
+    required: false
+    description: Server to deploy to
+
   runtime-server-timezone:
     required: false
     description: |
       Set the runtime server's timezone.
       Must be one of "TZ database name".
       See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
-    default: ''
 
   apt-dependencies:
     required: false
