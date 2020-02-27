@@ -74,7 +74,7 @@ setup.kibana:
 `;
   }
 
-  if (journalbeat.elastic) {
+  if (journalbeat.elastic.hosts.length) {
     journalbeatConfig += `
 output.elasticsearch:
   hosts: ${JSON.stringify(journalbeat.elastic.hosts)}
@@ -84,7 +84,7 @@ output.elasticsearch:
 `;
   }
 
-  if (journalbeat.logstashHosts) {
+  if (journalbeat.logstashHosts.length) {
     journalbeatConfig += `
 output.logstash:
   hosts: ${JSON.stringify(journalbeat.logstashHosts)}
