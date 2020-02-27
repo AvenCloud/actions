@@ -35,7 +35,9 @@ async function setupShhConfig(): Promise<void> {
   const runtimeHost = await getRuntimeHost();
   const runtimeHostPort = (await input('runtime-host-port')) || '22';
 
-  const hostKeys = (await exec(`ssh-keyscan ${runtimeHost}`)).stdout;
+  const hostKeys = (
+    await exec(`ssh-keyscan -p ${runtimeHostPort} ${runtimeHost}`)
+  ).stdout;
 
   console.log('Using host keys:');
   console.log(hostKeys);
