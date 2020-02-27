@@ -9,7 +9,7 @@ export async function setupTimezone(): Promise<void> {
   console.log('Setting timezone to:', runtimeServerTimezone);
 
   const path = '/etc/localtime';
-  const next = `/etc/share/zoneinfo/${runtimeServerTimezone}`;
+  const next = `/usr/share/zoneinfo/${runtimeServerTimezone}`;
 
   await ensureLinkIs(next, path);
 }
