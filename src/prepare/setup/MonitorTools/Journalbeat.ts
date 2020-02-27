@@ -88,7 +88,10 @@ setup.kibana:
 `;
   }
 
+  let configured = 0;
+
   if (journalbeat.elastic.hosts.length) {
+    configured++;
     journalbeatConfig += `
 output.elasticsearch:
   hosts: ${JSON.stringify(journalbeat.elastic.hosts)}
@@ -99,14 +102,21 @@ output.elasticsearch:
   }
 
   if (journalbeat.logstashHosts.length) {
-    journalbeatConfig += `
+    if (configured) {
+      console.log('Skipping logstash config in favor of elasticsearch');
+    } else {
+      configured++;
+      journalbeatConfig += `
 output.logstash:
   hosts: ${JSON.stringify(journalbeat.logstashHosts)}
   #ssl.certificate_authorities: ["/etc/pki/root/ca.pem"]
   #ssl.certificate: "/etc/pki/client/cert.pem"
   #ssl.key: "/etc/pki/client/cert.key"
 `;
+    }
   }
+
+  if (!configured) console.log('Warning: No journalbeat outputs configured');
 
   const change = await ensureFileIs(
     '/etc/journalbeat/journalbeat.yml',
