@@ -7,6 +7,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "@typescript-eslint/no-floating-promises": "error",
     "jsdoc/check-examples": "off",
     "no-console": "off",
     "prettier/prettier": "warn",
