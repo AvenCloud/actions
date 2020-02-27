@@ -43,8 +43,8 @@ export type Config = {
     /**
      * Host to use for kibana.
      */
-    kibanaHost?: string;
-    elastic?: {
+    kibanaHost: string;
+    elastic: {
       /**
        * Hosts to use for elasticsearch.
        */
@@ -55,6 +55,6 @@ export type Config = {
     /**
      * Hosts to use for elasticsearch.
      */
-    logstashHosts?: string[];
+    logstashHosts: string[];
   };
 };

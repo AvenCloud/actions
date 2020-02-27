@@ -65,33 +65,32 @@ export async function setupJournalbeat(): Promise<void> {
   #monitoring.elasticsearch:
 
   #migration.6_to_7.enabled: true
-
 `;
 
   if (journalbeat.kibanaHost) {
-    journalbeatConfig += `setup.kibana:
+    journalbeatConfig += `
+setup.kibana:
   host: "${journalbeat.kibanaHost}"
-
 `;
   }
 
   if (journalbeat.elastic) {
-    journalbeatConfig += `output.elasticsearch:
+    journalbeatConfig += `
+output.elasticsearch:
   hosts: ${JSON.stringify(journalbeat.elastic.hosts)}
   #protocol: "https"
   username: ${JSON.stringify(journalbeat.elastic.username)}
   password: ${JSON.stringify(journalbeat.elastic.password)}
-
 `;
   }
 
   if (journalbeat.logstashHosts) {
-    journalbeatConfig += `output.logstash:
+    journalbeatConfig += `
+output.logstash:
   hosts: ${JSON.stringify(journalbeat.logstashHosts)}
   #ssl.certificate_authorities: ["/etc/pki/root/ca.pem"]
   #ssl.certificate: "/etc/pki/client/cert.pem"
   #ssl.key: "/etc/pki/client/cert.key"
-
 `;
   }
 

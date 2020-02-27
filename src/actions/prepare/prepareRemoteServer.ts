@@ -58,15 +58,26 @@ async function getConfig(): Promise<Config> {
     .split(/\s/)
     .filter(s => s);
 
-  // TODO
-  ret.journalbeat;
+  const temp = {
+    kibanaHost: await input('kibana-host'),
+    elastic: {
+      hosts: (await input('elastic-hosts')).split(/\s/).filter(s => s),
+      username: await input('elastic-username'),
+      password: await input('elastic-password'),
+    },
+    logstashHosts: (await input('logstash-hosts')).split(/\s/).filter(s => s),
+  };
 
-  await input('service-name');
-  await input('start-server-command');
+  if (
+    temp.kibanaHost ||
+    temp.elastic.hosts.length ||
+    temp.logstashHosts.length
+  ) {
+    ret.journalbeat = temp;
+  }
+
+  // TODO
   await input('service-configs');
-  await input('service-config-files');
-  await input('apt-dependencies');
-  await input('runtime-apt-dependencies');
   await input('verbosity');
 
   return ret;
