@@ -14,7 +14,7 @@ async function getAuthorizedDeployKey(): Promise<string> {
 
 async function getAuthorizedDeployKeyNew(): Promise<string | undefined> {
   const keyFile = `${process.env.HOME}/.ssh/id_rsa.2`;
-  if (!exists(keyFile)) return;
+  if (!(await exists(keyFile))) return;
   return (await exec(`ssh-keygen -y -f ${keyFile}`)).stdout.trim();
 }
 
