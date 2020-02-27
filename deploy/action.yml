@@ -18,7 +18,6 @@ inputs:
   extra-keys:
     required: false
     description: List of keys to add to authorized_keys on runtime server
-    default: ''
 
   deploy-directory:
     required: false
@@ -28,12 +27,12 @@ inputs:
   service-name:
     required: false
     description: What to call the Systemd service that runs this process
-    default: '' # Uses the first domain name
+    # Uses the first domain name
 
   service-description:
     required: false
     description: Systemd service description
-    default: ''
+
   start-server-command:
     required: false
     description: The command to run, with the code as the working directory.
@@ -43,13 +42,16 @@ inputs:
     description: |
       Extra lines to put in Systemd config
       Use to extend the Aven Systemd service implementation
-    default: ''
+
   service-config-files:
     required: false
     description: |
       List of files to put into service config dir.
       Use to extend the Aven Systemd service implementation
-    default: ''
+
+  runtime-user:
+    required: false
+    description: User to run the daemon as on the runtime server
 
   runtime-host-hostname:
     required: false
@@ -68,11 +70,27 @@ inputs:
   apt-dependencies:
     required: false
     description: Apt dependencies to be installed for build or runtime
-    default: ''
+
   runtime-apt-dependencies:
     required: false
     description: Apt dependencies to be installed for runtime only
-    default: ''
+
+  #journalbeat
+  kibana-host:
+    required: false
+    description: Host to use for kibana.
+  elastic-hosts:
+    required: false
+    description: Elastic Hosts
+  elastic-username:
+    required: false
+    description: Elastic Username
+  elastic-password:
+    required: false
+    description: Elastic Password
+  logstash-hosts:
+    required: false
+    description: Hosts to use for elasticsearch.
 
   verbosity:
     required: false
