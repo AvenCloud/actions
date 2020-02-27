@@ -25,46 +25,46 @@ export async function setupJournalbeat(): Promise<void> {
   await exec('systemctl enable journalbeat');
 
   let journalbeatConfig = `journalbeat.inputs:
-  - paths: []
-    #backoff: 1s
-    #max_backoff: 20s
-    seek: cursor
-    #cursor_seek_fallback: head
-    #include_matches: []
-    #fields:
-
-  #journalbeat:
-    #registry_file: registry
-
-  setup.template.settings:
-    index.number_of_shards: 1
-    #index.codec: best_compression
-    #_source.enabled: false
-
-  #name:
-  #tags: ["service-X", "web-tier"]
+- paths: []
+  #backoff: 1s
+  #max_backoff: 20s
+  seek: cursor
+  #cursor_seek_fallback: head
+  #include_matches: []
   #fields:
 
-  #setup.dashboards.enabled: false
-  #setup.dashboards.url:
+#journalbeat:
+  #registry_file: registry
 
-  processors:
-    - add_host_metadata: ~
-    - add_cloud_metadata: ~  
-    - decode_json_fields:
-        fields: ["message"]
-        process_array: true
-        max_depth: 8
-        target: ""
+setup.template.settings:
+  index.number_of_shards: 1
+  #index.codec: best_compression
+  #_source.enabled: false
 
-  #logging.level: debug
-  #logging.selectors: ["*"]
+#name:
+#tags: ["service-X", "web-tier"]
+#fields:
 
-  #monitoring.enabled: false
-  #monitoring.cluster_uuid:
-  #monitoring.elasticsearch:
+#setup.dashboards.enabled: false
+#setup.dashboards.url:
 
-  #migration.6_to_7.enabled: true
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~  
+  - decode_json_fields:
+      fields: ["message"]
+      process_array: true
+      max_depth: 8
+      target: ""
+
+#logging.level: debug
+#logging.selectors: ["*"]
+
+#monitoring.enabled: false
+#monitoring.cluster_uuid:
+#monitoring.elasticsearch:
+
+#migration.6_to_7.enabled: true
 `;
 
   if (journalbeat.kibanaHost) {
