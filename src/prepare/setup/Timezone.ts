@@ -9,5 +9,5 @@ export async function setupTimezone(): Promise<void> {
   const path = '/etc/localtime';
   const next = `/etc/share/zoneinfo/${timezone}`;
 
-  ensureLinkIs(next, path);
+  await ensureLinkIs(next, path);
 }
