@@ -6,6 +6,8 @@ export async function setupTimezone(): Promise<void> {
 
   if (!runtimeServerTimezone) return;
 
+  console.log('Setting timezone to:', runtimeServerTimezone);
+
   const path = '/etc/localtime';
   const next = `/etc/share/zoneinfo/${runtimeServerTimezone}`;
 
