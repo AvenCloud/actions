@@ -51,9 +51,12 @@ inputs:
       Use to extend the Aven Systemd service implementation
     default: ''
 
-  runtime-host:
+  runtime-host-hostname:
     required: false
-    description: Server to deploy to
+    description: Hostname of the runtime server that we're deploying to
+  runtime-host-port:
+    required: false
+    description: Port of the runtime server that we're deploying to
 
   runtime-server-timezone:
     required: false

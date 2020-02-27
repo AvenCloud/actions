@@ -33,6 +33,7 @@ async function setupShhConfig(): Promise<void> {
   // cSpell:ignore keyscan
 
   const runtimeHost = await getRuntimeHost();
+  const runtimeHostPort = (await input('runtime-host-port')) || '22';
 
   const hostKeys = (await exec(`ssh-keyscan ${runtimeHost}`)).stdout;
 
@@ -46,7 +47,7 @@ async function setupShhConfig(): Promise<void> {
   const config = `
 Host runtime-server
   HostName ${runtimeHost}
-  Port 22
+  Port ${runtimeHostPort}
   User root
   CheckHostIP no
 `;
