@@ -5,7 +5,7 @@ description: Deploy an Aven project to a runtime server
 author: Cameron Tacklind <cameron@tacklind.com>
 inputs:
   domains:
-    required: true
+    required: false
     description: |
       Whitespace separated list of domain names to use.
       The first one is the primary domain.
@@ -51,7 +51,7 @@ inputs:
       Use to extend the Aven Systemd service implementation
     default: ''
 
-  timezone:
+  runtime-server-timezone:
     required: false
     description: |
       Set the runtime server's timezone.

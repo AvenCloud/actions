@@ -2,7 +2,7 @@ export type Config = {
   /**
    * List of domains to get https keys for.
    */
-  domains: string[];
+  domains?: string[];
 
   authorizedKeys: string[];
 
@@ -29,7 +29,7 @@ export type Config = {
    *
    * @see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
    */
-  timezone?: string;
+  runtimeServerTimezone?: string;
   /**
    * List of `apt-get` packages to install before running.
    */
@@ -38,6 +38,7 @@ export type Config = {
    * List of `apt-get` packages to install only on runtime server.
    */
   runtimeAptDependencies?: string[];
+
   journalbeat?: {
     /**
      * Host to use for kibana.

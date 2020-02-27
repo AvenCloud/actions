@@ -49,7 +49,7 @@ async function getConfig(): Promise<Config> {
   // TODO
   ret.webRootPath;
 
-  ret.timezone = await input('timezone');
+  ret.runtimeServerTimezone = await input('runtime-server-timezone');
 
   ret.aptDependencies = (await input('apt-dependencies'))
     .split(/\s/)
@@ -65,7 +65,6 @@ async function getConfig(): Promise<Config> {
   await input('start-server-command');
   await input('service-configs');
   await input('service-config-files');
-  await input('timezone');
   await input('apt-dependencies');
   await input('runtime-apt-dependencies');
   await input('verbosity');

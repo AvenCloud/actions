@@ -2,12 +2,12 @@ import { ensureLinkIs } from '../../utils/fs';
 import { readAvenConfig } from './readAvenConfig';
 
 export async function setupTimezone(): Promise<void> {
-  const { timezone } = await readAvenConfig();
+  const { runtimeServerTimezone } = await readAvenConfig();
 
-  if (!timezone) return;
+  if (!runtimeServerTimezone) return;
 
   const path = '/etc/localtime';
-  const next = `/etc/share/zoneinfo/${timezone}`;
+  const next = `/etc/share/zoneinfo/${runtimeServerTimezone}`;
 
   await ensureLinkIs(next, path);
 }

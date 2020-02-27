@@ -137,6 +137,8 @@ async function setupNginxConfigs(): Promise<void> {
 
   const { domains } = await readAvenConfig();
 
+  if (!domains) throw new Error('Domains unset!');
+
   const keys: { private: string; public: string } = {
     // cSpell:ignore snakeoil
     public: '/etc/ssl/certs/ssl-cert-snakeoil.pem',
@@ -269,6 +271,7 @@ async function setupNginxBasicServers(): Promise<void> {
 
 async function setupNginxServersFull(): Promise<void> {
   const { webRootPath, domains, serviceName } = await readAvenConfig();
+  if (!domains) throw new Error('Domains unset!');
 
   if (webRootPath) await mkdir(webRootPath);
 
@@ -356,6 +359,7 @@ systemctl reload nginx
 
 async function setupCertbot(): Promise<void> {
   const { domains } = await readAvenConfig();
+  if (!domains) throw new Error('Domains unset!');
 
   await Promise.all([
     ensureFileIs('/etc/letsencrypt/cli.ini', certbotCliConfig),
@@ -380,6 +384,7 @@ cat ${letsencryptLive}/$YOURDOMAIN/{privkey,fullchain}.pem > ${outputFile}
   // TODO: Support multiple independent domains that serve different websites.
 
   async function doCertbot(): Promise<void> {
+    if (!domains) throw new Error('Domains unset!');
     // Run once for each nginx server. Generates one key pair. Must include all domains that share server.
     await spawn(
       'certbot',
@@ -429,10 +434,11 @@ async function checkNginxConfig(): Promise<void> {
 }
 
 export async function setupNginx(): Promise<void> {
+  const { domains } = await readAvenConfig();
+  if (!domains) return;
+
   // Ensure Let's Encrypt configuration is setup
   await setupNginxBasic();
-
-  const { domains } = await readAvenConfig();
 
   await checkNginxConfig().catch(async () => {
     debug(
