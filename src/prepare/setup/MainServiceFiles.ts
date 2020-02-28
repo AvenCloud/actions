@@ -43,10 +43,10 @@ WorkingDirectory=/opt/aven/${serviceName}
 ExecStart=${startServerCommand}
 Environment=HOME="${HomeDir}"
 User=${runtimeUser}
-${extraService ? `\n${extraService}\n` : '\n'}
+${extraService ? `\n# Extra configs\n${extraService}\n` : '\n'}
 [Install]
 WantedBy=default.target
-  `;
+`;
 
   await ensureFileIs(serviceFile, serviceFileContents);
 
