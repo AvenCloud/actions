@@ -37,6 +37,7 @@ After=network.target
 
 [Service]
 Type=simple
+Restart=always
 Environment=LISTEN_PATH="/run/${serviceName}/sock"
 RuntimeDirectory=${serviceName}
 WorkingDirectory=/opt/aven/${serviceName}
