@@ -279,8 +279,6 @@ async function setupNginxServersFull(): Promise<void> {
 
   if (webRootPath) await mkdir(webRootPath);
 
-  console.log('Webroot Path:', webRootPath);
-
   const upstreamUniqueName = domains[0].replace('.', '_');
 
   // Name of the socket file used for communications with

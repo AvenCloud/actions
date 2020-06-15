@@ -84,9 +84,6 @@ async function getConfig(): Promise<Config> {
   // TODO
   await input('verbosity');
 
-  console.log('Got config:');
-  console.log(ret);
-
   return ret;
 }
 
