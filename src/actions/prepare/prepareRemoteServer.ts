@@ -50,8 +50,7 @@ async function getConfig(): Promise<Config> {
     extraConfigs: await input('service-configs'),
   };
 
-  // TODO
-  ret.webRootPath;
+  ret.webRootPath = await input('static-web-root');
 
   ret.runtimeServerTimezone = await input('runtime-server-timezone');
 

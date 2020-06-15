@@ -24,6 +24,10 @@ inputs:
     description: Folder to copy to remote
     default: '.' # Maybe dist?
 
+  static-web-root:
+    required: false
+    description: Folder to serve statically with Nginx
+
   service-name:
     required: false
     description: What to call the Systemd service that runs this process
