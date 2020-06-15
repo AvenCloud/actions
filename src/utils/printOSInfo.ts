@@ -15,10 +15,7 @@ export async function printOSInfo(): Promise<void> {
    */
 
   // Dirty get OS version
-  const osVersion = release
-    .split('\n')[3]
-    .split('=')[1]
-    .split('"')[1];
+  const osVersion = release.split('\n')[3].split('=')[1].split('"')[1];
 
   console.log('OS Version', osVersion);
 }
