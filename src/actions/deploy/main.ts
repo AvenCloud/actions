@@ -12,7 +12,7 @@ import { getServiceName } from '../../utils/getServiceName';
 async function setupShhConfig(): Promise<void> {
   await mkdir(`${process.env.HOME}/.ssh`);
 
-  const files: Promise<boolean>[] = [];
+  const files: Array<Promise<boolean>> = [];
 
   const deployKey = await input('deploy-key');
   const deployKeyNew = await input('deploy-key-new');

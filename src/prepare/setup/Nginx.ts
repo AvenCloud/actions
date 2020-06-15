@@ -452,7 +452,9 @@ export async function setupNginx(): Promise<void> {
     // TODO: Only clear out failing configs
     await Promise.all(
       domains.map(domain =>
-        unlink(`/etc/nginx/servers/${domain}.conf`).catch(() => {}),
+        unlink(`/etc/nginx/servers/${domain}.conf`).catch(() => {
+          // function intentionally empty
+        }),
       ),
     );
 

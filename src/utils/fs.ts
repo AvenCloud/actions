@@ -96,10 +96,10 @@ export async function ensureFileIs(
 }
 
 export async function ensureFilesAre(
-  list: {
+  list: Array<{
     filename: string;
     contents: string | Buffer;
-  }[],
+  }>,
 ): Promise<void> {
   await Promise.all(
     list.map(({ filename, contents }) => ensureFileIs(filename, contents)),
