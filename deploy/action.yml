@@ -24,6 +24,14 @@ inputs:
     description: Folder to copy to remote
     default: '.' # Maybe dist?
 
+  static-web-root:
+    required: false
+    description: Folder to serve statically with Nginx
+
+  disable-service:
+    required: false
+    description: Disables the default systemd service
+
   service-name:
     required: false
     description: What to call the Systemd service that runs this process
@@ -37,12 +45,12 @@ inputs:
     required: false
     description: The command to run, with the code as the working directory.
     default: /usr/bin/npm start
+
   service-configs:
     required: false
     description: |
       Extra lines to put in Systemd config
       Use to extend the Aven Systemd service implementation
-
   service-config-files:
     required: false
     description: |
