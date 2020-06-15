@@ -123,7 +123,8 @@ async function copyServiceConfigs(): Promise<void> {
 async function restartApplication(): Promise<void> {
   const serviceName = await getServiceName();
 
-  await spawn('ssh', 'runtime-server', 'systemctl', 'stop', serviceName);
+  if ((await input('disable-service')) !== 'yes')
+    await spawn('ssh', 'runtime-server', 'systemctl', 'stop', serviceName);
 
   // TODO: migrate db
 
@@ -138,7 +139,8 @@ async function restartApplication(): Promise<void> {
       console.log(e);
     });
   } else {
-    await spawn('ssh', 'runtime-server', 'systemctl', 'start', serviceName);
+    if ((await input('disable-service')) !== 'yes')
+      await spawn('ssh', 'runtime-server', 'systemctl', 'start', serviceName);
   }
 }
 

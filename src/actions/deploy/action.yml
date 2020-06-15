@@ -28,6 +28,10 @@ inputs:
     required: false
     description: Folder to serve statically with Nginx
 
+  disable-service:
+    required: false
+    description: Disables the default systemd service
+
   service-name:
     required: false
     description: What to call the Systemd service that runs this process

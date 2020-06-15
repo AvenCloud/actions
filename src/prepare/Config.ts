@@ -17,6 +17,9 @@ export type Config = {
      * Name of systemd service to use, if not the default as chosen by workflow filename.
      */
     name: string;
+
+    enable: boolean;
+
     /**
      * Description of systemd service to use. Defaults to "".
      */

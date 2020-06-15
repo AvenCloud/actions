@@ -43,6 +43,8 @@ async function getConfig(): Promise<Config> {
   ret.service = {
     name: await getServiceName(),
 
+    enable: (await input('disable-service')) !== 'yes',
+
     description: await input('service-description'),
 
     startServerCommand: await input('start-server-command'),

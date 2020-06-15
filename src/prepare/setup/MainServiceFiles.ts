@@ -55,7 +55,7 @@ WantedBy=default.target
   await exec(`systemctl daemon-reload`);
 
   // Run service on server boot
-  await exec(`systemctl enable ${serviceName}.service`);
+  if (service.enable) await exec(`systemctl enable ${serviceName}.service`);
 
   await Promise.all([dir1, dir2, dir3]);
 }
