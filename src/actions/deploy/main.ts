@@ -15,7 +15,6 @@ async function setupShhConfig(): Promise<void> {
   const files: Promise<boolean>[] = [];
 
   const deployKey = await input('deploy-key');
-
   const deployKeyNew = await input('deploy-key-new');
 
   const mainKey = deployKey || deployKeyNew;
@@ -27,10 +26,12 @@ async function setupShhConfig(): Promise<void> {
   const identityFile = `${process.env.HOME}/.ssh/id_rsa`;
   const identityFileNew = `${process.env.HOME}/.ssh/id_rsa.2`;
 
-  files.push(ensureFileIs(identityFile, mainKey, 0o600));
+  files.push(ensureFileIs(identityFile, mainKey.trim() + '\n', 0o600));
 
   if (deployKey && deployKeyNew) {
-    files.push(ensureFileIs(identityFileNew, deployKeyNew, 0o600));
+    files.push(
+      ensureFileIs(identityFileNew, deployKeyNew.trim() + '\n', 0o600),
+    );
   }
 
   // cSpell:ignore keyscan
