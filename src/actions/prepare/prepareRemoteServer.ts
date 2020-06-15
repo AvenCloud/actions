@@ -86,6 +86,12 @@ async function getConfig(): Promise<Config> {
   return ret;
 }
 
+/**
+ * Connect to a remote server and get it into a state we want by running the prepare script on the remote server.
+ *
+ * The script is copied to the remote system and then streamed a block of JSON that includes all of the settings from the github action needed to setup the remote system.
+ *
+ */
 export async function prepareRemoteServer(): Promise<void> {
   const verboseSSHArg: string[] = [];
   const verboseSpawnArg: string[] = [];

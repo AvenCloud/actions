@@ -6,6 +6,9 @@ import { mkdir, ensureFileIs, ensureFileContains } from '../../utils/fs';
 import { getRuntimeHost } from '../../utils/getRuntimeHost';
 import { getServiceName } from '../../utils/getServiceName';
 
+/**
+ * Setup the action runtime ssh settings that will be used for deploy.
+ */
 async function setupShhConfig(): Promise<void> {
   await mkdir(`${process.env.HOME}/.ssh`);
 
