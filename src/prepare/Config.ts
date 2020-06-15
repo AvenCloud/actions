@@ -36,6 +36,7 @@ export type Config = {
    * Directory inside built application that should be served as static files by Nginx.
    */
   webRootPath?: string;
+
   /**
    * Timezone to use.
    *
@@ -44,6 +45,7 @@ export type Config = {
    * @see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
    */
   runtimeServerTimezone?: string;
+
   /**
    * List of `apt-get` packages to install before running.
    */
