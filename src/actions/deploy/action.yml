@@ -37,12 +37,12 @@ inputs:
     required: false
     description: The command to run, with the code as the working directory.
     default: /usr/bin/npm start
+
   service-configs:
     required: false
     description: |
       Extra lines to put in Systemd config
       Use to extend the Aven Systemd service implementation
-
   service-config-files:
     required: false
     description: |

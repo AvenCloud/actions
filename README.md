@@ -1,18 +1,43 @@
-## Aven Actions
+# Aven Actions
 
 Pre-made "Actions" for deploying Aven projects with GitHub Actions
 
 [![AvenCloud/actions status](https://github.com/AvenCloud/actions/workflows/Main/badge.svg?branch=master)](https://github.com/AvenCloud/actions/actions?query=branch%3Amaster)
 
-## Usage
+- [New Server Quick Setup](#new-server-quick-setup)
 
-![Usage Map](Usage.svg)
+| Action                | `uses`                          | Description                                                                                            |
+| --------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| [Checkout](#checkout) | `AvenCloud/actions/checkout@v1` | Get the latest copy of code from github and install node dependencies                                  |
+| [Prepare](#prepare)   | `AvenCloud/actions/prepare@v1`  | Prepare an Ubuntu server for running a node backend                                                    |
+| [Deploy](#deploy)     | `AvenCloud/actions/deploy@v1`   | Prepare the runtime server environment, copy new compiled sources over, and start the new application. |
 
-Add a couple files to your repository.
+- [Development](#development)
 
-1. Workflow config
-2. Aven config
-3. Add secrets
+## New Server Quick Setup
+
+1. Generate a new deploy key pair `(mkfifo key ...`
+2. Add key to GitHub Secrets
+   - `DEPLOY_KEY`
+3. Create new server instance
+   - Use generated public key for `root` `authorized_keys`
+   - get new server IP
+4. Create DNS entry for IP
+5. Add workflow file to repo
+6. Commit & Push
+
+### Generate Keys
+
+Run this command on a linux bash shell to generate a new key pair.
+
+<!-- cSpell:ignore mkfifo -->
+
+```bash
+(mkfifo key key.pub && cat key key.pub &) && echo "y" | ssh-keygen -t rsa -b 4096 -C "GitHub Action $(date +%Y-%m-%d)" -N '' -q -f key > /dev/null; rm key key.pub
+```
+
+1. Take the `-----BEGIN RSA PRIVATE KEY-----\n...[lines of base64]...\n-----END RSA PRIVATE KEY-----` and add to github secrets for project
+2. Take the `ssh-rsa [bas64 data] GitHub Action ...` and use for new droplet with Digital Ocean.
 
 ### Workflow Config
 
@@ -29,9 +54,6 @@ jobs:
       - name: Checkout Latest
         uses: AvenCloud/actions/checkout@v1
 
-      - name: Test and Check
-        uses: yarn test
-
       - name: Build Application
         run: yarn build
 
@@ -40,36 +62,23 @@ jobs:
         with:
           domains: example.com
           deploy-key: ${{ secrets.DEPLOY_KEY }}
+          # See below for more options
 ```
 
-### Secrets
+## [Checkout](src/actions/checkout)
 
-A couple secrets need to be added to GitHub as well:
+Checkout latest version of code and run `yarn` or `npm` to initialize dependencies.
 
-#### Deploy Keys
+### What it does
 
-Keys that will allow root access to server we're deploying to.
-
-Run this command on a linux bash shell to generate a new key pair.
-
-- `DEPLOY_KEY` _Example: `-----BEGIN RSA PRIVATE KEY-----\n...[lines of base64]...\n-----END RSA PRIVATE KEY-----`_
-
-<!-- cSpell:ignore mkfifo -->
-
-```bash
-(mkfifo key key.pub && cat key key.pub &) && echo "y" | ssh-keygen -t rsa -b 4096 -C "GitHub Action $(date +%Y-%m-%d)" -N '' -q -f key ; rm key key.pub
-```
-
-### Checkout
-
-Setup the working environment.
-
-- Clone a (shallow) copy of the code base
+- Clones a (shallow) copy of the code base
   - Mostly matches `actions/checkout` official action
-- Install any needed operating system dependencies
-  - References configuration file that specifies needed dependencies?
-- Install yarn (or npm) dependencies
+- Installs any needed operating system dependencies
+  - References configuration file that specifies needed dependencies - _In progress_
+- Installs yarn (or npm) dependencies
   - Automatic caching of dependencies
+
+### Usage
 
 ```yml
 jobs:
@@ -83,14 +92,48 @@ jobs:
           ref: Git Reference to download
           repo: GitHub Repository to download
           token: GH Token Override
+
+      # Now you can do other stuff like...
+
+      - name: Test and Check
+        uses: yarn test
+
+      - name: Build Application
+        run: yarn build
 ```
 
-### Deploy
+## Prepare(src/actions/prepare)
 
-Do the deploy step specified by the aven project.
-Likely includes migration script.
+Prepare an Ubuntu server for running a node backend
 
-- Run `npm run deploy`
+### Usage
+
+```yml
+on: push
+jobs:
+  my-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Latest
+        uses: AvenCloud/actions/checkout@v1
+
+      # Now you can do other stuff like...
+
+      - name: Test and Check
+        uses: yarn test
+
+      - name: Build Application
+        run: yarn build
+
+      - name: Checkout Latest
+        uses: AvenCloud/actions/prepare@v1
+```
+
+## [Deploy](src/actions/deploy)
+
+Prepare the runtime server environment, copy new compiled sources over, and start the new application.
+
+### Usage
 
 ```yml
 jobs:
@@ -102,26 +145,40 @@ jobs:
         with:
           domains: example.com
           deploy-key: ${{ secrets.DEPLOY_KEY }}
+
+          ## Remaining options are optional
+
+          # Give service a specific name
+          service-name: myService
+
+          # Default run command is `/usr/bin/npm start`
+          start-server-command: /usr/bin/yarn my-start
+
+          # Override default image timezone
+          runtime-server-timezone: America/Los_Angeles
+
+          # Authorize other keys to access the machine
+          extra-keys: |
+            https://exmaple.com/my.keys
+            github-user-account
+
+          # local directory to copy to remote
           deploy-directory: dist
-          service-config-files: secrets.conf configs.conf
+
+          # Extra [Service] configuration for systemd service file
+          service-configs: |
+            # Raw text. Maybe bring in secrets:
+            Environment=MY_SECRET=${{ toJSON(secrets.MY_SECRET) }}
+
+          service-config-files: # List of extra files to copy as service file overrides
+
+          # Change log level of action
           verbosity: 3
 ```
 
-## New Server Setup
-
-1. Generate a new deploy key pair `(mkfifo key ...`
-2. Add key to GitHub Secrets
-   - `DEPLOY_KEY`
-3. Create new server instance
-   - Use generated public key for `root` `authorized_keys`
-   - get new server IP
-4. Create DNS entry for IP
-5. Add workflow file to repo
-6. Commit & Push
-
 ## Development
 
-Setup everything
+Run a single command to setup a development environment to work on AvenTools/actions:
 
 ```bash
 npm i
