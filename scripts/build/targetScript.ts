@@ -1,6 +1,7 @@
 import { promises } from 'fs';
 import ncc from '@zeit/ncc';
 import { ensureFileIs, ensureFilesAre, exists as access } from '../utils/fs';
+import { join } from 'path';
 
 const { mkdir } = promises;
 
@@ -10,7 +11,8 @@ export async function buildTargetScript(
   target: Target,
   mainOrPost: 'main' | 'post',
 ): Promise<void> {
-  const file = `./src/actions/${target}/${mainOrPost}.ts`;
+  const src = join(__dirname, `../../src`);
+  const file = `${src}/actions/${target}/${mainOrPost}.ts`;
 
   // TODO: test if yml has post, not mainOrPost
   if (mainOrPost === 'post' && !(await access(file))) return;

@@ -1,11 +1,12 @@
 import { promises } from 'fs';
 import ncc from '@zeit/ncc';
 import { ensureFileIs, ensureFilesAre } from '../utils/fs';
+import { join } from 'path';
 
 const { mkdir, copyFile } = promises;
 
 export async function buildPrepareScript(): Promise<void> {
-  const prepareSrc = `./src/prepare`;
+  const prepareSrc = join(__dirname, `../../src/prepare`);
 
   const prepare = ncc(`${prepareSrc}/index.ts`, {
     sourceMap: true,

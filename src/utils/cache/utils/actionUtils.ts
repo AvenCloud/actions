@@ -3,7 +3,7 @@ import { mkdirP } from '@actions/io';
 import { statSync } from 'fs';
 import { homedir } from 'os';
 import { join, resolve } from 'path';
-import uuidV4 from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 
 import { Events, Outputs, State } from '../constants';
 import { ArtifactCacheEntry } from '../contracts';
@@ -28,7 +28,7 @@ export async function createTempDirectory(): Promise<string> {
     }
     tempDirectory = join(baseLocation, 'actions', 'temp');
   }
-  const dest = join(tempDirectory, uuidV4());
+  const dest = join(tempDirectory, uuid());
   await mkdirP(dest);
   return dest;
 }
